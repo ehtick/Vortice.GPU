@@ -25,8 +25,8 @@
     <Copyright>Copyright © 2021 Amer Koleci and Contributors</Copyright>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/amerkoleci/alimer.git</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/amerkoleci/alimer</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/amerkoleci/Vortice.GPU.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/amerkoleci/Vortice.GPU</PackageProjectUrl>
     <PackageTags>dotnet net netcore netstandard csharp library graphics shader hlsl gamedev compute gpu vortice</PackageTags>
   </PropertyGroup>
   

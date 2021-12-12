@@ -16,6 +16,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{7DCE6069
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.GPU.Vulkan", "src\Vortice.GPU.Vulkan\Vortice.GPU.Vulkan.csproj", "{65FB2ED8-64E4-40E2-BEAD-722E3E5975FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.GPU.Direct3D12", "src\Vortice.GPU.Direct3D12\Vortice.GPU.Direct3D12.csproj", "{02DB78CB-F0CC-4EC5-8AE4-E0B0E16AC2C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +30,14 @@ Global
 		{85FA4738-3A74-4E00-8BD4-CA11E31DE697}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85FA4738-3A74-4E00-8BD4-CA11E31DE697}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85FA4738-3A74-4E00-8BD4-CA11E31DE697}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65FB2ED8-64E4-40E2-BEAD-722E3E5975FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65FB2ED8-64E4-40E2-BEAD-722E3E5975FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65FB2ED8-64E4-40E2-BEAD-722E3E5975FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65FB2ED8-64E4-40E2-BEAD-722E3E5975FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02DB78CB-F0CC-4EC5-8AE4-E0B0E16AC2C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02DB78CB-F0CC-4EC5-8AE4-E0B0E16AC2C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02DB78CB-F0CC-4EC5-8AE4-E0B0E16AC2C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02DB78CB-F0CC-4EC5-8AE4-E0B0E16AC2C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

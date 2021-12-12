@@ -1,23 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants Condition="'$(ExcludeVulkan)' == 'true'">$(DefineConstants);EXCLUDE_VULKAN_BACKEND</DefineConstants>
-    <DefineConstants Condition="'$(ExcludeD3D11)' == 'true'">$(DefineConstants);EXCLUDE_D3D11_BACKEND</DefineConstants>
-    <DefineConstants Condition="'$(ExcludeD3D12)' == 'true'">$(DefineConstants);EXCLUDE_D3D12_BACKEND</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.1" />
-    <PackageReference Include="Vortice.Vulkan" Version="1.4.6" Condition="'$(ExcludeVulkan)' != 'true'" />
+    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Vulkan/**/*" Condition="'$(ExcludeVulkan)' == 'true'" />
-    <Compile Remove="D3D/**/*" Condition="'$(ExcludeD3D11)' == 'true' Or '$(ExcludeD3D12)' == 'true'" />
-    <Compile Remove="D3D11/**/*" Condition="'$(ExcludeD3D11)' == 'true'" />
-    <Compile Remove="D3D12/**/*" Condition="'$(ExcludeD3D12)' == 'true'" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
+
 
 </Project>

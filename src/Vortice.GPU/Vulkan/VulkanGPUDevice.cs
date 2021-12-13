@@ -8,29 +8,78 @@ namespace Vortice.GPU.Vulkan;
 
 public class VulkanGPUDevice : GPUDevice
 {
-    public static readonly Lazy<bool> IsSupported = new(CheckIsSupported);
+    private readonly GPUDeviceInfo _info;
+    private readonly GPUAdapterInfo _adapterInfo;
 
-    private static bool CheckIsSupported()
+    public VulkanGPUDevice(VkPhysicalDevice physicalDevice)
     {
-        try
+        PhysicalDevice = physicalDevice;
+
+        _info = new()
         {
-            VkResult result = vkInitialize();
-            if (result != VkResult.Success)
+            Features = new()
             {
-                return false;
+                IndependentBlend = true,
+                ComputeShader = true,
+                TessellationShader = true,
+                MultiViewport = true,
+                IndexUInt32 = true,
+                MultiDrawIndirect = true,
+                FillModeNonSolid = true,
+                SamplerAnisotropy = true,
+                TextureCompressionETC2 = false,
+                TextureCompressionASTC_LDR = false,
+                TextureCompressionBC = true,
+                TextureCubeArray = true,
+                Raytracing = false
+            },
+            Limits = new()
+            {
+                MaxVertexAttributes = 16,
+                MaxVertexBindings = 16,
+                MaxVertexAttributeOffset = 2047,
+                MaxVertexBindingStride = 2048,
+                //MaxTextureDimension1D = RequestTexture1DUDimension,
+                //MaxTextureDimension2D = RequestTexture2DUOrVDimension,
+                //MaxTextureDimension3D = RequestTexture3DUVOrWDimension,
+                //MaxTextureDimensionCube = RequestTextureCubeDimension,
+                //MaxTextureArrayLayers = RequestTexture2DArrayAxisDimension,
+                //MaxColorAttachments = SimultaneousRenderTargetCount,
+                //MaxUniformBufferRange = RequestConstantBufferElementCount * 16,
+                //MaxStorageBufferRange = uint.MaxValue,
+                //MinUniformBufferOffsetAlignment = ConstantBufferDataPlacementAlignment,
+                //MinStorageBufferOffsetAlignment = 16u,
+                //MaxSamplerAnisotropy = MaxMaxAnisotropy,
+                //MaxViewports = ViewportAndScissorRectObjectCountPerPipeline,
+                //MaxViewportWidth = ViewportBoundsMax,
+                //MaxViewportHeight = ViewportBoundsMax,
+                //MaxTessellationPatchSize = InputAssemblerPatchMaxControlPointCount,
+                //MaxComputeSharedMemorySize = ComputeShaderThreadLocalTempRegisterPool,
+                //MaxComputeWorkGroupCountX = ComputeShaderDispatchMaxThreadGroupsPerDimension,
+                //MaxComputeWorkGroupCountY = ComputeShaderDispatchMaxThreadGroupsPerDimension,
+                //MaxComputeWorkGroupCountZ = ComputeShaderDispatchMaxThreadGroupsPerDimension,
+                //MaxComputeWorkGroupInvocations = ComputeShaderThreadGroupMaxThreadsPerGroup,
+                //MaxComputeWorkGroupSizeX = ComputeShaderThreadGroupMaxX,
+                //MaxComputeWorkGroupSizeY = ComputeShaderThreadGroupMaxY,
+                //MaxComputeWorkGroupSizeZ = ComputeShaderThreadGroupMaxZ,
             }
+        };
 
-            // TODO: Enumerate physical devices and try to create instance.
-
-            return true;
-        }
-        catch
+        _adapterInfo = new()
         {
-            return false;
-        }
+        };
     }
 
+
+    public VkPhysicalDevice PhysicalDevice { get; }
+
     public VkDevice NativeDevice { get; }
+
+    /// <inheritdoc />
+    public override GPUDeviceInfo Info => _info;
+
+    /// <inheritdoc />
+    public override GPUAdapterInfo AdapterInfo => _adapterInfo;
 
     /// <inheritdoc />
     protected override void OnDispose()

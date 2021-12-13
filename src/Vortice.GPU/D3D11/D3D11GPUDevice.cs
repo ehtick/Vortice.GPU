@@ -20,6 +20,9 @@ internal class D3D11GPUDevice : GPUDevice
         FeatureLevel.Level_10_0
     };
 
+    private readonly GPUDeviceInfo _info;
+    private readonly GPUAdapterInfo _adapterInfo;
+
     public D3D11GPUDevice(IDXGIAdapter1 adapter)
     {
         Guard.IsNotNull(adapter, nameof(adapter));
@@ -36,31 +39,31 @@ internal class D3D11GPUDevice : GPUDevice
 
         Adapter = adapter;
 
-        {
-            if (D3D11CreateDevice(
+        if (D3D11CreateDevice(
             adapter,
             DriverType.Unknown,
             creationFlags,
             s_featureLevels,
             out ID3D11Device tempDevice, out FeatureLevel featureLevel, out ID3D11DeviceContext tempContext).Failure)
-            {
-                // If the initialization fails, fall back to the WARP device.
-                // For more information on WARP, see:
-                // http://go.microsoft.com/fwlink/?LinkId=286690
-                D3D11CreateDevice(
-                    IntPtr.Zero,
-                    DriverType.Warp,
-                    creationFlags,
-                    s_featureLevels,
-                    out tempDevice, out featureLevel, out tempContext).CheckError();
-            }
-
-            NativeDevice = tempDevice.QueryInterface<ID3D11Device1>();
-            ImmediateContext = tempContext.QueryInterface<ID3D11DeviceContext1>();
-            FeatureLevel = featureLevel;
-            tempContext.Dispose();
-            tempDevice.Dispose();
+        {
+            // If the initialization fails, fall back to the WARP device.
+            // For more information on WARP, see:
+            // http://go.microsoft.com/fwlink/?LinkId=286690
+            D3D11CreateDevice(
+                IntPtr.Zero,
+                DriverType.Warp,
+                creationFlags,
+                s_featureLevels,
+                out tempDevice, out featureLevel, out tempContext).CheckError();
         }
+
+        NativeDevice = tempDevice.QueryInterface<ID3D11Device1>();
+        ImmediateContext = tempContext.QueryInterface<ID3D11DeviceContext1>();
+        FeatureLevel = featureLevel;
+        tempContext.Dispose();
+        tempDevice.Dispose();
+
+        NativeDevice.DebugName = "Vortice.GPU";
 
         if (ValidationMode != ValidationMode.Disabled)
         {
@@ -90,6 +93,67 @@ internal class D3D11GPUDevice : GPUDevice
                 }
                 d3d11Debug.Dispose();
             }
+
+            // Init capabilites.
+            AdapterDescription1 adapterDesc = adapter.Description1;
+
+            _info = new()
+            {
+                Features = new()
+                {
+                    IndependentBlend = true,
+                    ComputeShader = true,
+                    TessellationShader = true,
+                    MultiViewport = true,
+                    IndexUInt32 = true,
+                    MultiDrawIndirect = true,
+                    FillModeNonSolid = true,
+                    SamplerAnisotropy = true,
+                    TextureCompressionETC2 = false,
+                    TextureCompressionASTC_LDR = false,
+                    TextureCompressionBC = true,
+                    TextureCubeArray = true,
+                    Raytracing = false
+                },
+                Limits = new()
+                {
+                    MaxVertexAttributes = 16,
+                    MaxVertexBindings = 16,
+                    MaxVertexAttributeOffset = 2047,
+                    MaxVertexBindingStride = 2048,
+                    MaxTextureDimension1D = 16384,
+                    MaxTextureDimension2D = 16384,
+                    MaxTextureDimension3D = 2048,
+                    MaxTextureDimensionCube = 16384,
+                    MaxTextureArrayLayers = 2048,
+                    MaxColorAttachments = 8,
+                    //MaxUniformBufferRange = RequestConstantBufferElementCount * 16,
+                    //MaxStorageBufferRange = uint.MaxValue,
+                    //MinUniformBufferOffsetAlignment = ConstantBufferDataPlacementAlignment,
+                    //MinStorageBufferOffsetAlignment = 16u,
+                    //MaxSamplerAnisotropy = MaxMaxAnisotropy,
+                    MaxViewports = 16,
+                    MaxViewportWidth = 32767,
+                    MaxViewportHeight = 32767,
+                    MaxTessellationPatchSize = 32,
+                    //MaxComputeSharedMemorySize = ComputeShaderThreadLocalTempRegisterPool,
+                    //MaxComputeWorkGroupCountX = ComputeShaderDispatchMaxThreadGroupsPerDimension,
+                    //MaxComputeWorkGroupCountY = ComputeShaderDispatchMaxThreadGroupsPerDimension,
+                    //MaxComputeWorkGroupCountZ = ComputeShaderDispatchMaxThreadGroupsPerDimension,
+                    //MaxComputeWorkGroupInvocations = ComputeShaderThreadGroupMaxThreadsPerGroup,
+                    //MaxComputeWorkGroupSizeX = ComputeShaderThreadGroupMaxX,
+                    //MaxComputeWorkGroupSizeY = ComputeShaderThreadGroupMaxY,
+                    //MaxComputeWorkGroupSizeZ = ComputeShaderThreadGroupMaxZ,
+                }
+            };
+
+            _adapterInfo = new()
+            {
+                AdapterName = adapterDesc.Description,
+                AdapterType = GPUAdapterType.Unknown,
+                Vendor = (VendorId)adapterDesc.VendorId,
+                VendorId = (uint)adapterDesc.VendorId,
+            };
         }
     }
 
@@ -99,9 +163,33 @@ internal class D3D11GPUDevice : GPUDevice
     public FeatureLevel FeatureLevel { get; }
 
     /// <inheritdoc />
+    public override GPUDeviceInfo Info => _info;
+
+    /// <inheritdoc />
+    public override GPUAdapterInfo AdapterInfo => _adapterInfo;
+
+    /// <inheritdoc />
     protected override void OnDispose()
     {
         ImmediateContext.Flush();
+        ImmediateContext.Dispose();
+
+#if DEBUG
+        uint refCount = NativeDevice.Release();
+        if (refCount > 0)
+        {
+            System.Diagnostics.Debug.WriteLine($"Direct3D11: There are {refCount} unreleased references left on the device");
+
+            ID3D11Debug? d3d11Debug = NativeDevice.QueryInterfaceOrNull<ID3D11Debug>();
+            if (d3d11Debug != null)
+            {
+                d3d11Debug.ReportLiveDeviceObjects(ReportLiveDeviceObjectFlags.Detail | ReportLiveDeviceObjectFlags.IgnoreInternal);
+                d3d11Debug.Dispose();
+            }
+        }
+#else
+        NativeDevice.Dispose();
+#endif
 
         Adapter.Dispose();
     }

@@ -30,7 +30,7 @@ internal static partial class GPUDeviceHelper
             case GPUBackend.Vulkan:
                 if (IsBackendSupported(GPUBackend.Vulkan))
                 {
-                    return new Vulkan.VulkanGPUDevice();
+                    return new Vulkan.VulkanGPUDevice(Vortice.Vulkan.VkPhysicalDevice.Null);
                 }
 
                 throw new GPUException($"{nameof(GPUBackend.Vulkan)} is not supported");
@@ -72,7 +72,7 @@ internal static partial class GPUDeviceHelper
         {
 #if GPU_VULKAN_BACKEND
             case GPUBackend.Vulkan:
-                return Vulkan.VulkanGPUDevice.IsSupported.Value;
+                return Vulkan.VulkanGPUDeviceFactory.IsSupported.Value;
 #endif
 
 #if GPU_D3D11_BACKEND
@@ -102,7 +102,7 @@ internal static partial class GPUDeviceHelper
         else if (PlatformInfo.IsAndroid || PlatformInfo.IsLinux)
         {
 #if GPU_VULKAN_BACKEND
-            if (Vulkan.VulkanGPUDevice.IsSupported.Value)
+            if (Vulkan.VulkanGPUDeviceFactory.IsSupported.Value)
                 return GPUBackend.Direct3D12;
 #endif
         }

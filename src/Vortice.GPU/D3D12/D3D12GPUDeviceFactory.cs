@@ -61,6 +61,14 @@ internal static class D3D12GPUDeviceFactory
         return foundCompatibleDevice;
     }
 
+    public static void Shutdown()
+    {
+        if (_dxgiFactory != null)
+        {
+            _dxgiFactory.Dispose();
+        }
+    }
+
     public static IDXGIFactory4 Factory { get => _dxgiFactory ??= CreateDXGIFactory(); set => _dxgiFactory = value; }
 
     private static IDXGIFactory4 CreateDXGIFactory()

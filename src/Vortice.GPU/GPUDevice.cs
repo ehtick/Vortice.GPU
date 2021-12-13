@@ -74,6 +74,16 @@ public abstract class GPUDevice : IDisposable
     public static GPUDevice Default => GPUDeviceHelper.DefaultFactory.Value;
 
     /// <summary>
+    /// Get the device information, see <see cref="GPUDeviceInfo"/> for details.
+    /// </summary>
+    public abstract GPUDeviceInfo Info { get; }
+
+    /// <summary>
+    /// Get the GPU adapter information, see <see cref="GPUAdapterInfo"/> for details.
+    /// </summary>
+    public abstract GPUAdapterInfo AdapterInfo { get; }
+
+    /// <summary>
     /// Wait for GPU to finish pending operations.
     /// </summary>
     public abstract void WaitIdle();

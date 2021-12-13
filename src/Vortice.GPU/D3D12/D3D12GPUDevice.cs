@@ -62,4 +62,9 @@ internal unsafe class D3D12GPUDevice : GPUDevice
     {
         Adapter.Dispose();
     }
+
+    /// <inheritdoc />
+    public override void WaitIdle()
+    {
+    }
 }

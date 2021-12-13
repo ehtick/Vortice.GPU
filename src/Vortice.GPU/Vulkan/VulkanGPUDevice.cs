@@ -1,4 +1,4 @@
-﻿// Copyright (c) Amer Koleci and contributors.
+// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using Vortice.Vulkan;
@@ -32,5 +32,15 @@ public class VulkanGPUDevice : GPUDevice
 
     public VkDevice NativeDevice { get; }
 
-    protected override void OnDispose() => throw new NotImplementedException();
+    /// <inheritdoc />
+    protected override void OnDispose()
+    {
+        WaitIdle();
+    }
+
+    /// <inheritdoc />
+    public override void WaitIdle()
+    {
+        vkDeviceWaitIdle(NativeDevice).CheckResult(); 
+    }
 }

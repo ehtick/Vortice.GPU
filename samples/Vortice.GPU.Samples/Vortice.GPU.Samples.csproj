@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);uap10.0.19041</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);net6.0-windows$(WindowsTargetFrameworkVersion)</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <RootNamespace>Vortice.GPU.Samples</RootNamespace>
@@ -13,11 +14,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Vortice.GPU\Vortice.GPU.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="ppy.SDL2-CS" Version="1.0.486-alpha" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Platform\**\*.*" />
     <EmbeddedResource Remove="Platform\**\*.*" />
 
     <!-- Workaround so the files appear in VS -->
     <None Include="Platform\**\*.*" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <Compile Include="Platform\Standard\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or $(TargetFramework.StartsWith('net6.0-windows')) ">
@@ -26,11 +39,6 @@
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
     <Compile Include="Platform\UWP\**\*.cs" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Vortice.GPU\Vortice.GPU.csproj" />
   </ItemGroup>
 
 </Project>

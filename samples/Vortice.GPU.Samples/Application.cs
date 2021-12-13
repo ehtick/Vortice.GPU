@@ -1,69 +1,79 @@
-// Copyright © Amer Koleci and Contributors.
+// Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
-
-using System.Runtime.CompilerServices;
 
 namespace Vortice.GPU.Samples;
 
 public abstract class Application : IDisposable
 {
-    private volatile int _isDisposed;
+    private readonly AppPlatform _platform;
+
+    public event EventHandler<EventArgs>? Disposed;
+
 
     protected Application()
     {
+        _platform = AppPlatform.Create(this);
+        _platform.Activated += OnPlatformActivated;
+        _platform.Deactivated += OnPlatformDeactivated;
+
         Device = GPUDevice.Default;
     }
 
+    public bool IsDisposed { get; private set; }
+    public Window MainWindow => _platform.MainWindow;
+
+    public bool IsActive => _platform.IsActive;
+
     /// <summary>
-    /// Releases unmanaged resources and performs other cleanup operations.
+    /// Gets the <see cref="GPUDevice"/> used for rendering.
     /// </summary>
+    public GPUDevice Device { get; }
+
+    public event EventHandler<EventArgs>? Activated;
+
+    public event EventHandler<EventArgs>? Deactivated;
+
     ~Application()
     {
-        if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) == 0)
-        {
-            OnDispose();
-        }
+        Dispose(dispose: false);
     }
 
-    // <summary>
-    /// Gets whether or not the current instance has already been disposed.
-    /// </summary>
-    public bool IsDisposed
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get
-        {
-            return _isDisposed != 0;
-        }
-    }
-
-    /// <inheritdoc />
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose()
     {
-        OnDispose();
+        Dispose(dispose: true);
         GC.SuppressFinalize(this);
     }
 
-    protected virtual void OnDispose()
+    protected virtual void Dispose(bool dispose)
     {
-    }
-
-    /// <summary>
-    /// Throws an <see cref="ObjectDisposedException" /> if the current instance has been disposed.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected void ThrowIfDisposed()
-    {
-        if (IsDisposed)
+        if (dispose && !IsDisposed)
         {
-            throw new ObjectDisposedException(ToString());
+            Device?.Dispose();
+            Disposed?.Invoke(this, EventArgs.Empty);
+            IsDisposed = true;
         }
     }
 
-    public GPUDevice Device { get; }
-
     public void Run()
     {
+        _platform.Run();
+    }
+
+    public void Tick()
+    {
+    }
+
+    internal void InitBeforeRun()
+    {
+    }
+
+    private void OnPlatformActivated(object? sender, EventArgs e)
+    {
+        Activated?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void OnPlatformDeactivated(object? sender, EventArgs e)
+    {
+        Deactivated?.Invoke(this, EventArgs.Empty);
     }
 }

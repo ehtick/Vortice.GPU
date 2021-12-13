@@ -72,4 +72,9 @@ public abstract class GPUDevice : IDisposable
     /// Gets the best supported <see cref="GPUDevice"/> of the current OS.
     /// </summary>
     public static GPUDevice Default => GPUDeviceHelper.DefaultFactory.Value;
+
+    /// <summary>
+    /// Wait for GPU to finish pending operations.
+    /// </summary>
+    public abstract void WaitIdle();
 }

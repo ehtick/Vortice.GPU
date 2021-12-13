@@ -33,7 +33,7 @@ internal static class PlatformInfo
 		const ProcessorArchitecture arm64 = (ProcessorArchitecture)12;
 		IsArm = arch == ProcessorArchitecture.Arm || arch == arm64;
         Is64BitOperatingSystem = IntPtr.Size == 8;
-#elif NET5_0_OR_GREATER
+#elif NET6_0_OR_GREATER
         IsMacOS = OperatingSystem.IsMacOS() || OperatingSystem.IsMacCatalyst();
         IsLinux = OperatingSystem.IsLinux();
         IsUnix = IsMacOS || IsLinux;
@@ -54,6 +54,5 @@ internal static class PlatformInfo
         IsArm = arch == Architecture.Arm || arch == Architecture.Arm64;
         Is64BitOperatingSystem = IntPtr.Size == 8;
 #endif
-
     }
 }

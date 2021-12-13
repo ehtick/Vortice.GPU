@@ -18,15 +18,47 @@ internal static partial class GPUDeviceHelper
 
     private static GPUDevice GetDefaultDevice()
     {
-        if (PlatformInfo.IsWindows)
+        GPUBackend backend = GPUDevice.PreferredBackend;
+        if (backend == GPUBackend.Count)
         {
-#if GPU_D3D12_BACKEND
-            if (D3D12.D3D12GPUDevice.IsSupported.Value)
-                return new D3D12.D3D12GPUDevice();
-#endif
+            backend = GetPlatformBackend();
         }
 
-        throw new GPUException("Unsupported GPUDevice detected!");
+        switch (backend)
+        {
+#if GPU_VULKAN_BACKEND
+            case GPUBackend.Vulkan:
+                if (IsBackendSupported(GPUBackend.Vulkan))
+                {
+                    return new Vulkan.VulkanGPUDevice();
+                }
+
+                throw new GPUException($"{nameof(GPUBackend.Vulkan)} is not supported");
+#endif
+
+#if GPU_D3D11_BACKEND
+            case GPUBackend.Direct3D11:
+                if (IsBackendSupported(GPUBackend.Direct3D11))
+                {
+                    return D3D11.D3D11GPUDeviceFactory.CreateDefault();
+                }
+
+                throw new GPUException($"{nameof(GPUBackend.Direct3D11)} is not supported");
+#endif
+
+#if GPU_D3D12_BACKEND
+            case GPUBackend.Direct3D12:
+                if (IsBackendSupported(GPUBackend.Direct3D12))
+                {
+                    return D3D12.D3D12GPUDeviceFactory.CreateDefault();
+                }
+
+                throw new GPUException($"{nameof(GPUBackend.Direct3D12)} is not supported");
+#endif
+
+            default:
+                throw new GPUException($"{backend} is not supported!");
+        }
     }
 
     public static bool IsBackendSupported(GPUBackend backend)
@@ -36,7 +68,26 @@ internal static partial class GPUDeviceHelper
             backend = GetPlatformBackend();
         }
 
-        return true;
+        switch (backend)
+        {
+#if GPU_VULKAN_BACKEND
+            case GPUBackend.Vulkan:
+                return Vulkan.VulkanGPUDevice.IsSupported.Value;
+#endif
+
+#if GPU_D3D11_BACKEND
+            case GPUBackend.Direct3D11:
+                return D3D11.D3D11GPUDeviceFactory.IsSupported.Value;
+#endif
+
+#if GPU_D3D12_BACKEND
+            case GPUBackend.Direct3D12:
+                return D3D12.D3D12GPUDeviceFactory.IsSupported.Value;
+#endif
+
+            default:
+                return false;
+        }
     }
 
     public static GPUBackend GetPlatformBackend()
@@ -44,7 +95,7 @@ internal static partial class GPUDeviceHelper
         if (PlatformInfo.IsWindows)
         {
 #if GPU_D3D12_BACKEND
-            if (D3D12.D3D12GPUDevice.IsSupported.Value)
+            if (D3D12.D3D12GPUDeviceFactory.IsSupported.Value)
                 return GPUBackend.Direct3D12;
 #endif
         }

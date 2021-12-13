@@ -39,13 +39,16 @@
     <PackageReference Include="Vortice.Vulkan" Version="1.4.6" Condition="'$(ExcludeVulkan)' != 'true'" />
   </ItemGroup>
 
-  <!-- D3D12 -->
+  <!-- D3D12/D3D12 -->
   <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.StartsWith('net6'))">
-    <DefineConstants>$(DefineConstants);GPU_D3D12_BACKEND</DefineConstants>
+    <DefineConstants>$(DefineConstants);GPU_D3D11_BACKEND;GPU_D3D12_BACKEND</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.StartsWith('net6'))">
+    <Compile Include="D3D\**\*.cs" />
+    <Compile Include="D3D11\**\*.cs" />
     <Compile Include="D3D12\**\*.cs" />
+    <PackageReference Include="Vortice.Direct3D11" Version="2.1.0-beta8" />
     <PackageReference Include="Vortice.Direct3D12" Version="2.1.0-beta8" />
   </ItemGroup>
   

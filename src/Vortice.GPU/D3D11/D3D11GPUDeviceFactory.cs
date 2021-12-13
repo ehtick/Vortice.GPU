@@ -1,4 +1,4 @@
-﻿// Copyright (c) Amer Koleci and contributors.
+// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using Vortice.Direct3D;
@@ -53,11 +53,7 @@ internal static class D3D11GPUDeviceFactory
 
     private static IDXGIFactory2 CreateDXGIFactory()
     {
-#if DEBUG
-        return CreateDXGIFactory2<IDXGIFactory4>(true);
-#else
-        return CreateDXGIFactory2<IDXGIFactory4>(false);
-#endif
+        return CreateDXGIFactory2<IDXGIFactory2>(GPUDevice.ValidationMode != ValidationMode.Disabled);
     }
 
     public static D3D11GPUDevice CreateDefault(GpuPreference gpuPreference = GpuPreference.HighPerformance)
@@ -115,6 +111,6 @@ internal static class D3D11GPUDeviceFactory
             throw new GPUException("No Direct3D 11 device found");
         }
 
-        return new D3D11.D3D11GPUDevice(adapter);
+        return new D3D11GPUDevice(adapter);
     }
 }

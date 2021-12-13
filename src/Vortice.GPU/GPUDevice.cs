@@ -1,4 +1,4 @@
-﻿// Copyright (c) Amer Koleci and contributors.
+// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System.Runtime.CompilerServices;
@@ -62,6 +62,11 @@ public abstract class GPUDevice : IDisposable
     /// Gets or sets the preferred <see cref="GPUBackend"/> to use.
     /// </summary>
     public static GPUBackend PreferredBackend { get; set; } = GPUBackend.Count;
+
+    /// <summary>
+    /// Gets or sets the <see cref="GPU.ValidationMode"/> to use.
+    /// </summary>
+    public static ValidationMode ValidationMode { get; set; } = ValidationMode.Disabled;
 
     /// <summary>
     /// Gets the best supported <see cref="GPUDevice"/> of the current OS.

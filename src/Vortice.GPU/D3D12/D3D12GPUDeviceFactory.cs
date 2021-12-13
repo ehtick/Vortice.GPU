@@ -1,4 +1,4 @@
-﻿// Copyright (c) Amer Koleci and contributors.
+// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using Vortice.Direct3D;
@@ -65,11 +65,7 @@ internal static class D3D12GPUDeviceFactory
 
     private static IDXGIFactory4 CreateDXGIFactory()
     {
-#if DEBUG
-        return CreateDXGIFactory2<IDXGIFactory4>(true);
-#else
-            return CreateDXGIFactory2<IDXGIFactory4>(false);
-#endif
+        return CreateDXGIFactory2<IDXGIFactory4>(GPUDevice.ValidationMode != ValidationMode.Disabled);
     }
 
     public static D3D12GPUDevice CreateDefault(GpuPreference gpuPreference = GpuPreference.HighPerformance)

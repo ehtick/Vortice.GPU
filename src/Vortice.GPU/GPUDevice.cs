@@ -57,4 +57,14 @@ public abstract class GPUDevice : IDisposable
             throw new ObjectDisposedException(ToString());
         }
     }
+
+    /// <summary>
+    /// Gets or sets the preferred <see cref="GPUBackend"/> to use.
+    /// </summary>
+    public static GPUBackend PreferredBackend { get; set; } = GPUBackend.Count;
+
+    /// <summary>
+    /// Gets the best supported <see cref="GPUDevice"/> of the current OS.
+    /// </summary>
+    public static GPUDevice Default => GPUDeviceHelper.DefaultFactory.Value;
 }

@@ -26,10 +26,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.GPU.Samples", "samp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorld", "samples\HelloWorld\HelloWorld.csproj", "{B3B917CD-C049-442E-8EBD-4C2EA68D1556}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.GPU.Vulkan", "src\Vortice.GPU.Vulkan\Vortice.GPU.Vulkan.csproj", "{D6A6EE36-636D-4B3B-B4A9-D330C0580D42}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.GPU.Direct3D12", "src\Vortice.GPU.Direct3D12\Vortice.GPU.Direct3D12.csproj", "{EBC934FF-CBBD-488C-8F7E-4592B8A2967F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,30 +84,6 @@ Global
 		{B3B917CD-C049-442E-8EBD-4C2EA68D1556}.Release|ARM64.Build.0 = Release|Any CPU
 		{B3B917CD-C049-442E-8EBD-4C2EA68D1556}.Release|x64.ActiveCfg = Release|Any CPU
 		{B3B917CD-C049-442E-8EBD-4C2EA68D1556}.Release|x64.Build.0 = Release|Any CPU
-		{D6A6EE36-636D-4B3B-B4A9-D330C0580D42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6A6EE36-636D-4B3B-B4A9-D330C0580D42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6A6EE36-636D-4B3B-B4A9-D330C0580D42}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{D6A6EE36-636D-4B3B-B4A9-D330C0580D42}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{D6A6EE36-636D-4B3B-B4A9-D330C0580D42}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D6A6EE36-636D-4B3B-B4A9-D330C0580D42}.Debug|x64.Build.0 = Debug|Any CPU
-		{D6A6EE36-636D-4B3B-B4A9-D330C0580D42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6A6EE36-636D-4B3B-B4A9-D330C0580D42}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6A6EE36-636D-4B3B-B4A9-D330C0580D42}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{D6A6EE36-636D-4B3B-B4A9-D330C0580D42}.Release|ARM64.Build.0 = Release|Any CPU
-		{D6A6EE36-636D-4B3B-B4A9-D330C0580D42}.Release|x64.ActiveCfg = Release|Any CPU
-		{D6A6EE36-636D-4B3B-B4A9-D330C0580D42}.Release|x64.Build.0 = Release|Any CPU
-		{EBC934FF-CBBD-488C-8F7E-4592B8A2967F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EBC934FF-CBBD-488C-8F7E-4592B8A2967F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EBC934FF-CBBD-488C-8F7E-4592B8A2967F}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{EBC934FF-CBBD-488C-8F7E-4592B8A2967F}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{EBC934FF-CBBD-488C-8F7E-4592B8A2967F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{EBC934FF-CBBD-488C-8F7E-4592B8A2967F}.Debug|x64.Build.0 = Debug|Any CPU
-		{EBC934FF-CBBD-488C-8F7E-4592B8A2967F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EBC934FF-CBBD-488C-8F7E-4592B8A2967F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EBC934FF-CBBD-488C-8F7E-4592B8A2967F}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{EBC934FF-CBBD-488C-8F7E-4592B8A2967F}.Release|ARM64.Build.0 = Release|Any CPU
-		{EBC934FF-CBBD-488C-8F7E-4592B8A2967F}.Release|x64.ActiveCfg = Release|Any CPU
-		{EBC934FF-CBBD-488C-8F7E-4592B8A2967F}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

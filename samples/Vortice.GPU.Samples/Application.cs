@@ -11,6 +11,7 @@ public abstract class Application : IDisposable
 
     protected Application()
     {
+        Device = GPUDevice.Default;
     }
 
     /// <summary>
@@ -59,6 +60,8 @@ public abstract class Application : IDisposable
             throw new ObjectDisposedException(ToString());
         }
     }
+
+    public GPUDevice Device { get; }
 
     public void Run()
     {

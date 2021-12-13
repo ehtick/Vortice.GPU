@@ -6,6 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Vulkan\**\*.*" />
+    <Compile Remove="D3D\**\*.*" />
+    <Compile Remove="D3D11\**\*.*" />
+    <Compile Remove="D3D12\**\*.*" />
+
+    <!-- Workaround so the files appear in VS -->
+    <None Include="Vulkan\**\*.*" />
+    <None Include="D3D\**\*.*" />
+    <None Include="D3D11\**\*.*" />
+    <None Include="D3D12\**\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
   </ItemGroup>
 
@@ -16,4 +29,24 @@
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
   </ItemGroup>
 
+  <!-- Vulkan -->
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.StartsWith('net6'))">
+    <DefineConstants>$(DefineConstants);GPU_VULKAN_BACKEND</DefineConstants>
+  </PropertyGroup>
+  
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.StartsWith('net6'))">
+    <Compile Include="Vulkan\**\*.cs" />
+    <PackageReference Include="Vortice.Vulkan" Version="1.4.6" Condition="'$(ExcludeVulkan)' != 'true'" />
+  </ItemGroup>
+
+  <!-- D3D12 -->
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.StartsWith('net6'))">
+    <DefineConstants>$(DefineConstants);GPU_D3D12_BACKEND</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.StartsWith('net6'))">
+    <Compile Include="D3D12\**\*.cs" />
+    <PackageReference Include="Vortice.Direct3D12" Version="2.1.0-beta8" />
+  </ItemGroup>
+  
 </Project>

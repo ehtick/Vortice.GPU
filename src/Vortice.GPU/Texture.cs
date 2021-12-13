@@ -3,9 +3,9 @@
 
 namespace Vortice.GPU;
 
-public abstract class Texture : Resource
+public abstract class Texture : GPUResource
 {
-    protected Texture(Device device) : base(device)
+    protected Texture(GPUDevice device) : base(device)
     {
     }
 }

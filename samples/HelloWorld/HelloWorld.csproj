@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);net6.0-windows$(WindowsTargetFrameworkVersion)</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>Vortice.GPU.Samples</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vortice.GPU.Samples\Vortice.GPU.Samples.csproj" />
+  </ItemGroup>
+
+</Project>

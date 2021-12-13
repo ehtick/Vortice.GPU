@@ -5,7 +5,7 @@ using Vortice.Vulkan;
 
 namespace Vortice.GPU.Vulkan;
 
-public class VulkanDevice : Device
+public class VulkanDevice : GPUDevice
 {
     public VkDevice NativeDevice { get; }
 

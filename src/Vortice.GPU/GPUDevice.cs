@@ -5,18 +5,18 @@ using System.Runtime.CompilerServices;
 
 namespace Vortice.GPU;
 
-public abstract class Device : IDisposable
+public abstract class GPUDevice : IDisposable
 {
     private volatile int _isDisposed;
 
-    protected Device()
+    protected GPUDevice()
     {
     }
 
     /// <summary>
     /// Releases unmanaged resources and performs other cleanup operations.
     /// </summary>
-    ~Device()
+    ~GPUDevice()
     {
         if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) == 0)
         {

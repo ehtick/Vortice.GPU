@@ -5,9 +5,9 @@ using Microsoft.Toolkit.Diagnostics;
 
 namespace Vortice.GPU;
 
-public abstract class Resource : IDisposable
+public abstract class GPUResource : IDisposable
 {
-    protected Resource(Device device)
+    protected GPUResource(GPUDevice device)
     {
         Guard.IsNotNull(device, nameof(device));
 
@@ -15,14 +15,14 @@ public abstract class Resource : IDisposable
     }
 
     /// <summary>
-    /// Get the <see cref="GPU.Device"/> object that created the resource.
+    /// Get the <see cref="GPUDevice"/> object that created the resource.
     /// </summary>
-    public Device Device { get; }
+    public GPUDevice Device { get; }
 
     /// <summary>
     /// Finalizes an instance of the <see cref="Resource" /> class.
     /// </summary>
-    ~Resource() => Dispose(disposing: false);
+    ~GPUResource() => Dispose(disposing: false);
 
     /// <inheritdoc />
     public void Dispose()

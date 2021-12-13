@@ -1,11 +1,38 @@
-﻿// Copyright (c) Amer Koleci and contributors.
-// Distributed under the MIT license. See the LICENSE file in the project root for more information.
+// Copyright © Amer Koleci and Contributors.
+// Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 namespace Vortice.GPU;
 
 public abstract class Texture : GPUResource
 {
-    protected Texture(GPUDevice device) : base(device)
+    protected Texture(GPUDevice device, in TextureDescriptor descriptor)
+        : base(device)
     {
+        Dimension = descriptor.Dimension;
+        Format = descriptor.Format;
+        Width = descriptor.Width;
+        Height = descriptor.Height;
+        Depth = descriptor.Dimension == TextureDimension.Texture3D ? descriptor.DepthOrArraySize : 1;
+        ArraySize = descriptor.Dimension != TextureDimension.Texture3D ? descriptor.DepthOrArraySize : 1;
+        MipLevels = descriptor.MipLevels;
+        SampleCount = descriptor.SampleCount;
+        Usage = descriptor.Usage;
     }
+
+    public int CalculateSubresource(int mipSlice, int arraySlice, int planeSlice = 0)
+    {
+        return mipSlice + arraySlice * MipLevels + planeSlice * MipLevels * ArraySize;
+    }
+
+    public TextureDimension Dimension { get; }
+
+    public TextureFormat Format { get; }
+
+    public int Width { get; }
+    public int Height { get; }
+    public int Depth { get; }
+    public int ArraySize { get; }
+    public int MipLevels { get; }
+    public TextureSampleCount SampleCount { get; }
+    public TextureUsage Usage { get; }
 }

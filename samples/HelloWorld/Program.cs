@@ -11,7 +11,7 @@ class Program
         GPUDevice.ValidationMode = ValidationMode.Enabled;
 #endif
 
-        //GPUDevice.PreferredBackend = GPUBackend.Direct3D11;
+        GPUDevice.PreferredBackend = GPUBackend.Direct3D11;
 
         using HelloWorldApp app = new HelloWorldApp();
         app.Run();

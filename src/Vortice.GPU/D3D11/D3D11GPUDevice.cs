@@ -199,4 +199,7 @@ internal class D3D11GPUDevice : GPUDevice
     {
         ImmediateContext.Flush();
     }
+
+    /// <inheritdoc />
+    protected override Texture CreateTextureCore(in TextureDescriptor descriptor) => new D3D11Texture(this, descriptor);
 }

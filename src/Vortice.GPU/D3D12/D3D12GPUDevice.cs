@@ -219,4 +219,7 @@ internal unsafe class D3D12GPUDevice : GPUDevice
     public override void WaitIdle()
     {
     }
+
+    /// <inheritdoc />
+    protected override Texture CreateTextureCore(in TextureDescriptor descriptor) => new D3D12Texture(this, descriptor);
 }

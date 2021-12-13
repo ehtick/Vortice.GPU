@@ -5,4 +5,8 @@ namespace Vortice.GPU.Samples;
 
 public class HelloWorldApp : Application
 {
+    protected override void Initialize()
+    {
+        using Texture texture = Device.CreateTexture(TextureDescriptor.Texture2D(TextureFormat.RGBA8UNorm, 256, 256));
+    }
 }

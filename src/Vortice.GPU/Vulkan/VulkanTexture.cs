@@ -1,4 +1,4 @@
-﻿// Copyright (c) Amer Koleci and contributors.
+// Copyright (c) Amer Koleci and contributors.
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using Vortice.Vulkan;
@@ -10,7 +10,8 @@ internal unsafe class VulkanTexture : Texture
 {
     private VkImage _handle;
 
-    public VulkanTexture(VulkanGPUDevice device) : base(device)
+    public VulkanTexture(VulkanGPUDevice device, in TextureDescriptor descriptor)
+        : base(device, descriptor)
     {
         VkImageCreateInfo createInfo = new VkImageCreateInfo
         {

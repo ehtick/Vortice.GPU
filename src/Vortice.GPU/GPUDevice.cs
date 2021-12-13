@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See the LICENSE file in the project root for more information.
 
 using System.Runtime.CompilerServices;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Vortice.GPU;
 
@@ -87,4 +88,15 @@ public abstract class GPUDevice : IDisposable
     /// Wait for GPU to finish pending operations.
     /// </summary>
     public abstract void WaitIdle();
+
+    public Texture CreateTexture(in TextureDescriptor descriptor)
+    {
+        Guard.IsGreaterThanOrEqualTo(descriptor.Width, 1, nameof(TextureDescriptor.Width));
+        Guard.IsGreaterThanOrEqualTo(descriptor.Height, 1, nameof(TextureDescriptor.Height));
+        Guard.IsGreaterThanOrEqualTo(descriptor.DepthOrArraySize, 1, nameof(TextureDescriptor.DepthOrArraySize));
+
+        return CreateTextureCore(descriptor);
+    }
+
+    protected abstract Texture CreateTextureCore(in TextureDescriptor descriptor);
 }

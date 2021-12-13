@@ -35,7 +35,7 @@ internal static class D3DUtils
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Format ToDXGIFormat(this TextureFormat format)
+    public static Format ToDXGIFormat(TextureFormat format)
     {
         switch (format)
         {

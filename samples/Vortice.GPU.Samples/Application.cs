@@ -65,6 +65,11 @@ public abstract class Application : IDisposable
 
     internal void InitBeforeRun()
     {
+        Initialize();
+    }
+
+    protected virtual void Initialize()
+    {
     }
 
     private void OnPlatformActivated(object? sender, EventArgs e)

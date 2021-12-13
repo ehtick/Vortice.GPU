@@ -92,4 +92,7 @@ public class VulkanGPUDevice : GPUDevice
     {
         vkDeviceWaitIdle(NativeDevice).CheckResult(); 
     }
+
+    /// <inheritdoc />
+    protected override Texture CreateTextureCore(in TextureDescriptor descriptor) => new VulkanTexture(this, descriptor);
 }

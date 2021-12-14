@@ -16,6 +16,7 @@ internal unsafe class D3D12GPUDevice : GPUDevice
     private readonly GPUAdapterInfo _adapterInfo;
 
     public D3D12GPUDevice(IDXGIAdapter1 adapter, in GPUDeviceDescriptor descriptor)
+        : base(GPUBackend.Direct3D12)
     {
         Guard.IsNotNull(adapter, nameof(adapter));
 

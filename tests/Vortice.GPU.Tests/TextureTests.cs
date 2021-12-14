@@ -12,7 +12,7 @@ public partial class TextureTests
     [TestMethod]
     public void CreateTexture2D()
     {
-        using GPUDevice device = GPUDevice.Create(new GPUDeviceDescriptor());
+        using GPUDevice device = GPUDevice.CreateDefault();
         using Texture texture = device.CreateTexture(TextureDescriptor.Texture2D(TextureFormat.RGBA8UNorm, 256, 256));
         Assert.IsNotNull(texture);
         Assert.AreSame(texture.Device, device);
@@ -29,7 +29,7 @@ public partial class TextureTests
     [TestMethod]
     public void CreateTexture2DWithMipLevels()
     {
-        using GPUDevice device = GPUDevice.Create(new GPUDeviceDescriptor());
+        using GPUDevice device = GPUDevice.CreateDefault();
         using Texture texture = device.CreateTexture(TextureDescriptor.Texture2D(TextureFormat.RGBA8UNorm, 256, 256, 0));
         Assert.IsNotNull(texture);
         Assert.AreSame(texture.Device, device);

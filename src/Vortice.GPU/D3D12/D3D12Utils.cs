@@ -9,23 +9,18 @@ namespace Vortice.GPU.D3D12;
 
 internal static class D3D12Utils
 {
-    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-    //public static ResourceDimension ToD3D12(this TextureDimension dimension)
-    //{
-    //    switch (dimension)
-    //    {
-    //        case TextureDimension.Texture1D:
-    //            return ResourceDimension.Texture1D;
-    //        case TextureDimension.Texture2D:
-    //            return ResourceDimension.Texture2D;
-    //        case TextureDimension.Texture3D:
-    //            return ResourceDimension.Texture3D;
-    //
-    //        default:
-    //            return ThrowHelper.ThrowArgumentException<ResourceDimension>("Invalid texture dimension");
-    //    }
-    //}
-    //
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ResourceDimension ToD3D12(TextureDimension dimension)
+    {
+        return dimension switch
+        {
+            TextureDimension.Texture1D => ResourceDimension.Texture1D,
+            TextureDimension.Texture2D => ResourceDimension.Texture2D,
+            TextureDimension.Texture3D => ResourceDimension.Texture3D,
+            _ => ThrowHelper.ThrowArgumentException<ResourceDimension>("Invalid texture dimension"),
+        };
+    }
+
     //[MethodImpl(MethodImplOptions.AggressiveInlining)]
     //public static CommandListType ToD3D12(this CommandQueueType type)
     //{

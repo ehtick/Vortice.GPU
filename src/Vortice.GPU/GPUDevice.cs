@@ -10,8 +10,11 @@ public abstract class GPUDevice : IDisposable
 {
     private volatile int _isDisposed;
 
-    protected GPUDevice()
+    protected GPUDevice(GPUBackend backend)
     {
+        Guard.IsTrue(backend != GPUBackend.Count, nameof(backend));
+
+        Backend = backend;
     }
 
     /// <summary>
@@ -59,10 +62,47 @@ public abstract class GPUDevice : IDisposable
         }
     }
 
+    public static void Shutdown()
+    {
+        GPUDeviceHelper.Shutdown();
+    }
+
+    /// <summary>
+    /// Verify whether given backend is supported.
+    /// </summary>
+    /// <param name="backend">The <see cref="GPUBackend"/> to check.</param>
+    /// <returns>True if supported, false otherwise.</returns>
+    public static bool IsBackendSupported(GPUBackend backend)
+    {
+        return GPUDeviceHelper.IsBackendSupported(backend);
+    }
+
+    /// <summary>
+    /// Create the default <see cref="GPUDevice"/> for given preferred backend.
+    /// </summary>
+    /// <param name="preferredBackend">The <see cref="GPUBackend"/> to use.</param>
+    /// <param name="validationMode">The <see cref="ValidationMode"/> to use.</param>
+    /// <returns>New instance of <see cref="GPUDevice"/>.</returns>
+    public static GPUDevice CreateDefault(GPUBackend preferredBackend = GPUBackend.Count, ValidationMode validationMode = ValidationMode.Disabled)
+    {
+        GPUDeviceDescriptor descriptor = new()
+        {
+            PreferredBackend = preferredBackend,
+            ValidationMode = validationMode
+        };
+
+        return GPUDeviceHelper.CreateDevice(descriptor);
+    }
+
     public static GPUDevice Create(in GPUDeviceDescriptor descriptor)
     {
         return GPUDeviceHelper.CreateDevice(descriptor);
     }
+
+    /// <summary>
+    /// Gets the <see cref="GPUBackend"/> of this device.
+    /// </summary>
+    public GPUBackend Backend { get; }
 
     /// <summary>
     /// Get the device information, see <see cref="GPUDeviceInfo"/> for details.

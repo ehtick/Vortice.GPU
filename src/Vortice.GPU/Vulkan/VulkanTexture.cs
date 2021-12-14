@@ -13,15 +13,15 @@ internal unsafe class VulkanTexture : Texture
     public VulkanTexture(VulkanGPUDevice device, in TextureDescriptor descriptor)
         : base(device, descriptor)
     {
-        VkImageCreateInfo createInfo = new VkImageCreateInfo
-        {
-            sType = VkStructureType.ImageCreateInfo,
-            pNext = null,
-            flags = VkImageCreateFlags.None,
-            imageType = VkImageType.Image2D
-        };
-
-        vkCreateImage(device.NativeDevice, &createInfo, null, out _handle).CheckResult();
+        //VkImageCreateInfo createInfo = new VkImageCreateInfo
+        //{
+        //    sType = VkStructureType.ImageCreateInfo,
+        //    pNext = null,
+        //    flags = VkImageCreateFlags.None,
+        //    imageType = VkImageType.Image2D
+        //};
+        //
+        //vkCreateImage(device.NativeDevice, &createInfo, null, out _handle).CheckResult();
     }
 
     public VkImage Handle => _handle;

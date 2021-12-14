@@ -8,6 +8,21 @@ namespace Vortice.GPU;
 /// </summary>
 internal static partial class GPUDeviceHelper
 {
+    public static void Shutdown()
+    {
+#if GPU_VULKAN_BACKEND
+        Vulkan.VulkanGPUDeviceFactory.Shutdown();
+#endif
+
+#if GPU_D3D11_BACKEND
+        //D3D11.D3D11GPUDeviceFactory.Shutdown();
+#endif
+
+#if GPU_D3D12_BACKEND
+        //D3D12.D3D12GPUDeviceFactory.Shutdown();
+#endif
+    }
+
     public static GPUDevice CreateDevice(in GPUDeviceDescriptor descriptor)
     {
         GPUBackend backend = descriptor.PreferredBackend;
@@ -22,7 +37,7 @@ internal static partial class GPUDeviceHelper
             case GPUBackend.Vulkan:
                 if (IsBackendSupported(GPUBackend.Vulkan))
                 {
-                    return new Vulkan.VulkanGPUDevice(Vortice.Vulkan.VkPhysicalDevice.Null);
+                    return Vulkan.VulkanGPUDeviceFactory.Create(descriptor);
                 }
 
                 throw new GPUException($"{nameof(GPUBackend.Vulkan)} is not supported");

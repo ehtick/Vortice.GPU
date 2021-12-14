@@ -7,12 +7,13 @@ class Program
 {
     static void Main()
     {
+        ValidationMode validationMode = ValidationMode.Disabled;
 #if DEBUG
-        //GPUDevice.ValidationMode = ValidationMode.Enabled;
+        validationMode = ValidationMode.Enabled;
 #endif
-        GPUBackend preferredBackend = GPUBackend.Direct3D11;
+        //GPUBackend preferredBackend = GPUBackend.Vulkan;
 
-        using HelloWorldApp app = new HelloWorldApp(preferredBackend);
+        using HelloWorldApp app = new(preferredBackend, validationMode);
         app.Run();
     }
 }

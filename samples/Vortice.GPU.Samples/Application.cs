@@ -10,17 +10,13 @@ public abstract class Application : IDisposable
     public event EventHandler<EventArgs>? Disposed;
 
 
-    protected Application(GPUBackend preferredBackend = GPUBackend.Count)
+    protected Application(GPUBackend preferredBackend = GPUBackend.Count, ValidationMode validationMode = ValidationMode.Disabled)
     {
         _platform = AppPlatform.Create(this);
         _platform.Activated += OnPlatformActivated;
         _platform.Deactivated += OnPlatformDeactivated;
 
-        GPUDeviceDescriptor descriptor = new()
-        {
-            PreferredBackend = preferredBackend
-        };
-        Device = GPUDevice.Create(descriptor);
+        Device = GPUDevice.CreateDefault(preferredBackend, validationMode);
     }
 
     public bool IsDisposed { get; private set; }
@@ -53,6 +49,7 @@ public abstract class Application : IDisposable
         if (dispose && !IsDisposed)
         {
             Device?.Dispose();
+            GPUDevice.Shutdown();
             Disposed?.Invoke(this, EventArgs.Empty);
             IsDisposed = true;
         }

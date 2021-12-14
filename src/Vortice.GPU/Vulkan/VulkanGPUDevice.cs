@@ -99,7 +99,7 @@ internal unsafe class VulkanGPUDevice : GPUDevice
         uint computeQueueIndex = 0;
         uint copyQueueIndex = 0;
 
-
+#if TODO
         bool FindVacantQueue(out uint family, uint index, VkQueueFlags required, VkQueueFlags ignore_flags, float priority)
         {
             for (int familyIndex = 0; familyIndex < queueFamiliesCount; familyIndex++)
@@ -128,7 +128,8 @@ internal unsafe class VulkanGPUDevice : GPUDevice
 
             family = QueueFamilyIgnored;
             return false;
-        }
+        } 
+#endif
 
         float priority = 1.0f;
         VkDeviceQueueCreateInfo queueCreateInfo = new VkDeviceQueueCreateInfo

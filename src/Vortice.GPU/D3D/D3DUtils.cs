@@ -138,7 +138,7 @@ internal static class D3DUtils
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Format GetTypelessFormatFromDepthFormat(this TextureFormat format)
+    public static Format GetTypelessFormatFromDepthFormat(TextureFormat format)
     {
         switch (format)
         {
@@ -158,7 +158,18 @@ internal static class D3DUtils
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int ToD3D12(this TextureSampleCount sampleCount)
+    public static GpuPreference ToDXGI(GPUPowerPreference powerPreference)
+    {
+        return powerPreference switch
+        {
+            GPUPowerPreference.HighPerformance => GpuPreference.HighPerformance,
+            GPUPowerPreference.LowPower => GpuPreference.MinimumPower,
+            _ => ThrowHelper.ThrowArgumentException<GpuPreference>("Invalid powerPreference"),
+        };
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int ToSampleCount(TextureSampleCount sampleCount)
     {
         switch (sampleCount)
         {
@@ -183,16 +194,12 @@ internal static class D3DUtils
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int PresentModeToBufferCount(PresentMode mode)
     {
-        switch (mode)
+        return mode switch
         {
-            case PresentMode.Immediate:
-            case PresentMode.Fifo:
-                return 2;
-            case PresentMode.Mailbox:
-                return 3;
-            default:
-                return ThrowHelper.ThrowArgumentException<int>("Invalid present mode");
-        }
+            PresentMode.Immediate or PresentMode.Fifo => 2,
+            PresentMode.Mailbox => 3,
+            _ => ThrowHelper.ThrowArgumentException<int>("Invalid present mode"),
+        };
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -23,13 +23,13 @@ internal class D3D11GPUDevice : GPUDevice
     private readonly GPUDeviceInfo _info;
     private readonly GPUAdapterInfo _adapterInfo;
 
-    public D3D11GPUDevice(IDXGIAdapter1 adapter)
+    public D3D11GPUDevice(IDXGIAdapter1 adapter, in GPUDeviceDescriptor descriptor)
     {
         Guard.IsNotNull(adapter, nameof(adapter));
 
         DeviceCreationFlags creationFlags = DeviceCreationFlags.BgraSupport;
 
-        if (ValidationMode != ValidationMode.Disabled)
+        if (descriptor.ValidationMode != ValidationMode.Disabled)
         {
             if (SdkLayersAvailable())
             {
@@ -65,7 +65,7 @@ internal class D3D11GPUDevice : GPUDevice
 
         NativeDevice.DebugName = "Vortice.GPU";
 
-        if (ValidationMode != ValidationMode.Disabled)
+        if (descriptor.ValidationMode != ValidationMode.Disabled)
         {
             ID3D11Debug? d3d11Debug = NativeDevice.QueryInterfaceOrNull<ID3D11Debug>();
             if (d3d11Debug != null)

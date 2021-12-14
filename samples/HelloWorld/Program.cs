@@ -8,12 +8,11 @@ class Program
     static void Main()
     {
 #if DEBUG
-        GPUDevice.ValidationMode = ValidationMode.Enabled;
+        //GPUDevice.ValidationMode = ValidationMode.Enabled;
 #endif
+        GPUBackend preferredBackend = GPUBackend.Direct3D11;
 
-        GPUDevice.PreferredBackend = GPUBackend.Direct3D11;
-
-        using HelloWorldApp app = new HelloWorldApp();
+        using HelloWorldApp app = new HelloWorldApp(preferredBackend);
         app.Run();
     }
 }

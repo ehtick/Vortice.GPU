@@ -6,13 +6,13 @@ using Vortice.Direct3D11;
 using Vortice.DXGI;
 using static Vortice.Direct3D11.D3D11;
 using static Vortice.DXGI.DXGI;
+using static Vortice.GPU.D3DUtils;
 
 namespace Vortice.GPU.D3D11;
 
 internal static class D3D11GPUDeviceFactory
 {
     public static readonly Lazy<bool> IsSupported = new(CheckIsSupported);
-    private static IDXGIFactory2? _dxgiFactory;
 
     private static bool CheckIsSupported()
     {
@@ -49,68 +49,66 @@ internal static class D3D11GPUDeviceFactory
         return foundCompatibleDevice;
     }
 
-    public static IDXGIFactory2 Factory { get => _dxgiFactory ??= CreateDXGIFactory(); set => _dxgiFactory = value; }
-
-    private static IDXGIFactory2 CreateDXGIFactory()
+    public static D3D11GPUDevice Create(in GPUDeviceDescriptor descriptor)
     {
-        return CreateDXGIFactory2<IDXGIFactory2>(GPUDevice.ValidationMode != ValidationMode.Disabled);
-    }
-
-    public static D3D11GPUDevice CreateDefault(GpuPreference gpuPreference = GpuPreference.HighPerformance)
-    {
-        IDXGIAdapter1? adapter = default;
-
-        IDXGIFactory6? dxgiFactory6 = Factory.QueryInterfaceOrNull<IDXGIFactory6>();
-
-        if (dxgiFactory6 != null)
+        using (IDXGIFactory2 factory = CreateDXGIFactory2<IDXGIFactory2>(descriptor.ValidationMode != ValidationMode.Disabled))
         {
-            for (int adapterIndex = 0; dxgiFactory6!.EnumAdapterByGpuPreference(adapterIndex, gpuPreference, out adapter).Success; adapterIndex++)
+            IDXGIAdapter1? adapter = default;
+
+            IDXGIFactory6? dxgiFactory6 = factory.QueryInterfaceOrNull<IDXGIFactory6>();
+
+            if (dxgiFactory6 != null)
             {
-                AdapterDescription1 desc = adapter!.Description1;
+                GpuPreference gpuPreference = ToDXGI(descriptor.PowerPreference);
 
-                // Don't select the Basic Render Driver adapter.
-                if ((desc.Flags & AdapterFlags.Software) != AdapterFlags.None)
+                for (int adapterIndex = 0; dxgiFactory6!.EnumAdapterByGpuPreference(adapterIndex, gpuPreference, out adapter).Success; adapterIndex++)
                 {
-                    adapter.Dispose();
+                    AdapterDescription1 desc = adapter!.Description1;
 
-                    continue;
+                    // Don't select the Basic Render Driver adapter.
+                    if ((desc.Flags & AdapterFlags.Software) != AdapterFlags.None)
+                    {
+                        adapter.Dispose();
+
+                        continue;
+                    }
+
+                    if (IsSupportedFeatureLevel(adapter, FeatureLevel.Level_11_0, DeviceCreationFlags.BgraSupport))
+                    {
+                        break;
+                    }
                 }
 
-                if (IsSupportedFeatureLevel(adapter, FeatureLevel.Level_11_0, DeviceCreationFlags.BgraSupport))
+                dxgiFactory6.Dispose();
+            }
+
+            if (adapter == null)
+            {
+                for (int adapterIndex = 0; factory.EnumAdapters1(adapterIndex, out adapter).Success; adapterIndex++)
                 {
-                    break;
+                    AdapterDescription1 desc = adapter.Description1;
+
+                    // Don't select the Basic Render Driver adapter.
+                    if ((desc.Flags & AdapterFlags.Software) != AdapterFlags.None)
+                    {
+                        adapter.Dispose();
+
+                        continue;
+                    }
+
+                    if (IsSupportedFeatureLevel(adapter, FeatureLevel.Level_11_0, DeviceCreationFlags.BgraSupport))
+                    {
+                        break;
+                    }
                 }
             }
 
-            dxgiFactory6.Dispose();
-        }
-
-        if (adapter == null)
-        {
-            for (int adapterIndex = 0; Factory.EnumAdapters1(adapterIndex, out adapter).Success; adapterIndex++)
+            if (adapter == null)
             {
-                AdapterDescription1 desc = adapter.Description1;
-
-                // Don't select the Basic Render Driver adapter.
-                if ((desc.Flags & AdapterFlags.Software) != AdapterFlags.None)
-                {
-                    adapter.Dispose();
-
-                    continue;
-                }
-
-                if (IsSupportedFeatureLevel(adapter, FeatureLevel.Level_11_0, DeviceCreationFlags.BgraSupport))
-                {
-                    break;
-                }
+                throw new GPUException("No Direct3D 11 device found");
             }
-        }
 
-        if (adapter == null)
-        {
-            throw new GPUException("No Direct3D 11 device found");
+            return new D3D11GPUDevice(adapter, descriptor);
         }
-
-        return new D3D11GPUDevice(adapter);
     }
 }

@@ -12,6 +12,7 @@ public partial class InitializationTests
     [TestMethod]
     public void IsSupported()
     {
-        Assert.IsTrue(GPUDevice.Default is not null);
+        using GPUDevice device = GPUDevice.Create(new GPUDeviceDescriptor());
+        Assert.IsTrue(device is not null);
     }
 }

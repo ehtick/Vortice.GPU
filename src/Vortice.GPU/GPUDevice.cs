@@ -59,20 +59,10 @@ public abstract class GPUDevice : IDisposable
         }
     }
 
-    /// <summary>
-    /// Gets or sets the preferred <see cref="GPUBackend"/> to use.
-    /// </summary>
-    public static GPUBackend PreferredBackend { get; set; } = GPUBackend.Count;
-
-    /// <summary>
-    /// Gets or sets the <see cref="GPU.ValidationMode"/> to use.
-    /// </summary>
-    public static ValidationMode ValidationMode { get; set; } = ValidationMode.Disabled;
-
-    /// <summary>
-    /// Gets the best supported <see cref="GPUDevice"/> of the current OS.
-    /// </summary>
-    public static GPUDevice Default => GPUDeviceHelper.DefaultFactory.Value;
+    public static GPUDevice Create(in GPUDeviceDescriptor descriptor)
+    {
+        return GPUDeviceHelper.CreateDevice(descriptor);
+    }
 
     /// <summary>
     /// Get the device information, see <see cref="GPUDeviceInfo"/> for details.

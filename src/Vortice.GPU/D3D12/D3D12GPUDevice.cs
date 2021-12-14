@@ -15,17 +15,17 @@ internal unsafe class D3D12GPUDevice : GPUDevice
     private readonly GPUDeviceInfo _info;
     private readonly GPUAdapterInfo _adapterInfo;
 
-    public D3D12GPUDevice(IDXGIAdapter1 adapter)
+    public D3D12GPUDevice(IDXGIAdapter1 adapter, in GPUDeviceDescriptor descriptor)
     {
         Guard.IsNotNull(adapter, nameof(adapter));
 
-        if (ValidationMode != ValidationMode.Disabled)
+        if (descriptor.ValidationMode != ValidationMode.Disabled)
         {
             if (D3D12GetDebugInterface(out ID3D12Debug? debugController).Success)
             {
                 debugController!.EnableDebugLayer();
 
-                if (ValidationMode == ValidationMode.GPU)
+                if (descriptor.ValidationMode == ValidationMode.GPU)
                 {
                     ID3D12Debug1? debugController1 = debugController.QueryInterfaceOrNull<ID3D12Debug1>();
                     if (debugController1 != null)
@@ -57,7 +57,7 @@ internal unsafe class D3D12GPUDevice : GPUDevice
         NativeDevice.Name = "Vortice.GPU";
 
         // Configure debug device (if active).
-        if (ValidationMode != ValidationMode.Disabled)
+        if (descriptor.ValidationMode != ValidationMode.Disabled)
         {
             ID3D12InfoQueue? d3d12InfoQueue = NativeDevice.QueryInterfaceOrNull<ID3D12InfoQueue>();
             if (d3d12InfoQueue != null)

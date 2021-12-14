@@ -8,14 +8,9 @@ namespace Vortice.GPU;
 /// </summary>
 internal static partial class GPUDeviceHelper
 {
-    /// <summary>
-    /// The <see cref="Lazy{T}"/> instance used to produce the default <see cref="GPUDevice"/> instance.
-    /// </summary>
-    public static readonly Lazy<GPUDevice> DefaultFactory = new(GetDefaultDevice);
-
-    private static GPUDevice GetDefaultDevice()
+    public static GPUDevice CreateDevice(in GPUDeviceDescriptor descriptor)
     {
-        GPUBackend backend = GPUDevice.PreferredBackend;
+        GPUBackend backend = descriptor.PreferredBackend;
         if (backend == GPUBackend.Count)
         {
             backend = GetPlatformBackend();
@@ -37,7 +32,7 @@ internal static partial class GPUDeviceHelper
             case GPUBackend.Direct3D11:
                 if (IsBackendSupported(GPUBackend.Direct3D11))
                 {
-                    return D3D11.D3D11GPUDeviceFactory.CreateDefault();
+                    return D3D11.D3D11GPUDeviceFactory.Create(descriptor);
                 }
 
                 throw new GPUException($"{nameof(GPUBackend.Direct3D11)} is not supported");
@@ -47,7 +42,7 @@ internal static partial class GPUDeviceHelper
             case GPUBackend.Direct3D12:
                 if (IsBackendSupported(GPUBackend.Direct3D12))
                 {
-                    return D3D12.D3D12GPUDeviceFactory.CreateDefault();
+                    return D3D12.D3D12GPUDeviceFactory.Create(descriptor);
                 }
 
                 throw new GPUException($"{nameof(GPUBackend.Direct3D12)} is not supported");

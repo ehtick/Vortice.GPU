@@ -6,13 +6,13 @@ using Vortice.Direct3D12;
 using Vortice.DXGI;
 using static Vortice.Direct3D12.D3D12;
 using static Vortice.DXGI.DXGI;
+using static Vortice.GPU.D3DUtils;
 
 namespace Vortice.GPU.D3D12;
 
 internal static class D3D12GPUDeviceFactory
 {
     public static readonly Lazy<bool> IsSupported = new(CheckIsSupported);
-    private static IDXGIFactory4? _dxgiFactory;
 
     private static bool CheckIsSupported()
     {
@@ -61,85 +61,75 @@ internal static class D3D12GPUDeviceFactory
         return foundCompatibleDevice;
     }
 
-    public static void Shutdown()
+    public static D3D12GPUDevice Create(in GPUDeviceDescriptor descriptor)
     {
-        if (_dxgiFactory != null)
+        using (IDXGIFactory4 factory = CreateDXGIFactory2<IDXGIFactory4>(descriptor.ValidationMode != ValidationMode.Disabled))
         {
-            _dxgiFactory.Dispose();
-        }
-    }
+            IDXGIAdapter1? adapter = default;
 
-    public static IDXGIFactory4 Factory { get => _dxgiFactory ??= CreateDXGIFactory(); set => _dxgiFactory = value; }
+            IDXGIFactory6? dxgiFactory6 = factory.QueryInterfaceOrNull<IDXGIFactory6>();
 
-    private static IDXGIFactory4 CreateDXGIFactory()
-    {
-        return CreateDXGIFactory2<IDXGIFactory4>(GPUDevice.ValidationMode != ValidationMode.Disabled);
-    }
-
-    public static D3D12GPUDevice CreateDefault(GpuPreference gpuPreference = GpuPreference.HighPerformance)
-    {
-        IDXGIAdapter1? adapter = default;
-
-        IDXGIFactory6? dxgiFactory6 = Factory.QueryInterfaceOrNull<IDXGIFactory6>();
-
-        if (dxgiFactory6 != null)
-        {
-            for (int adapterIndex = 0; dxgiFactory6!.EnumAdapterByGpuPreference(adapterIndex, gpuPreference, out adapter).Success; adapterIndex++)
+            if (dxgiFactory6 != null)
             {
-                AdapterDescription1 desc = adapter!.Description1;
+                GpuPreference gpuPreference = ToDXGI(descriptor.PowerPreference);
 
-                // Don't select the Basic Render Driver adapter.
-                if ((desc.Flags & AdapterFlags.Software) != AdapterFlags.None)
+                for (int adapterIndex = 0; dxgiFactory6!.EnumAdapterByGpuPreference(adapterIndex, gpuPreference, out adapter).Success; adapterIndex++)
                 {
-                    adapter.Dispose();
+                    AdapterDescription1 desc = adapter!.Description1;
 
-                    continue;
+                    // Don't select the Basic Render Driver adapter.
+                    if ((desc.Flags & AdapterFlags.Software) != AdapterFlags.None)
+                    {
+                        adapter.Dispose();
+
+                        continue;
+                    }
+
+                    if (IsSupported(adapter, FeatureLevel.Level_11_0))
+                    {
+                        break;
+                    }
                 }
 
-                if (IsSupported(adapter, FeatureLevel.Level_11_0))
+                dxgiFactory6.Dispose();
+            }
+
+            if (adapter == null)
+            {
+                for (int adapterIndex = 0; factory.EnumAdapters1(adapterIndex, out adapter).Success; adapterIndex++)
                 {
-                    break;
+                    AdapterDescription1 desc = adapter.Description1;
+
+                    // Don't select the Basic Render Driver adapter.
+                    if ((desc.Flags & AdapterFlags.Software) != AdapterFlags.None)
+                    {
+                        adapter.Dispose();
+
+                        continue;
+                    }
+
+                    if (IsSupported(adapter, FeatureLevel.Level_11_0))
+                    {
+                        break;
+                    }
                 }
             }
 
-            dxgiFactory6.Dispose();
-        }
-
-        if (adapter == null)
-        {
-            for (int adapterIndex = 0; Factory.EnumAdapters1(adapterIndex, out adapter).Success; adapterIndex++)
+            if (adapter == null)
             {
-                AdapterDescription1 desc = adapter.Description1;
-
-                // Don't select the Basic Render Driver adapter.
-                if ((desc.Flags & AdapterFlags.Software) != AdapterFlags.None)
+                // Try WARP12 instead
+                if (factory.EnumWarpAdapter(out adapter).Failure)
                 {
-                    adapter.Dispose();
-
-                    continue;
-                }
-
-                if (IsSupported(adapter, FeatureLevel.Level_11_0))
-                {
-                    break;
+                    throw new GPUException("WARP12 not available. Enable the 'Graphics Tools' optional feature");
                 }
             }
-        }
 
-        if (adapter == null)
-        {
-            // Try WARP12 instead
-            if (Factory.EnumWarpAdapter(out adapter).Failure)
+            if (adapter == null)
             {
-                throw new GPUException("WARP12 not available. Enable the 'Graphics Tools' optional feature");
+                throw new GPUException("No Direct3D 12 device found");
             }
-        }
 
-        if (adapter == null)
-        {
-            throw new GPUException("No Direct3D 12 device found");
+            return new D3D12GPUDevice(adapter, descriptor);
         }
-
-        return new D3D12GPUDevice(adapter);
     }
 }

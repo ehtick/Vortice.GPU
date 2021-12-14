@@ -10,13 +10,17 @@ public abstract class Application : IDisposable
     public event EventHandler<EventArgs>? Disposed;
 
 
-    protected Application()
+    protected Application(GPUBackend preferredBackend = GPUBackend.Count)
     {
         _platform = AppPlatform.Create(this);
         _platform.Activated += OnPlatformActivated;
         _platform.Deactivated += OnPlatformDeactivated;
 
-        Device = GPUDevice.Default;
+        GPUDeviceDescriptor descriptor = new()
+        {
+            PreferredBackend = preferredBackend
+        };
+        Device = GPUDevice.Create(descriptor);
     }
 
     public bool IsDisposed { get; private set; }

@@ -26,7 +26,7 @@
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard2'))">
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
@@ -34,21 +34,21 @@
   </ItemGroup>
 
   <!-- Vulkan -->
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.StartsWith('net6'))">
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard2')) Or $(TargetFramework.StartsWith('net6'))">
     <DefineConstants>$(DefineConstants);GPU_VULKAN_BACKEND</DefineConstants>
   </PropertyGroup>
   
-  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.StartsWith('net6'))">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard2')) Or $(TargetFramework.StartsWith('net6'))">
     <Compile Include="Vulkan\**\*.cs" />
-    <PackageReference Include="Vortice.Vulkan" Version="1.4.6" Condition="'$(ExcludeVulkan)' != 'true'" />
+    <PackageReference Include="Vortice.Vulkan" Version="1.4.7" Condition="'$(ExcludeVulkan)' != 'true'" />
   </ItemGroup>
 
   <!-- D3D12/D3D12 -->
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.StartsWith('net6'))">
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('netstandard2')) Or $(TargetFramework.StartsWith('net6'))">
     <DefineConstants>$(DefineConstants);GPU_D3D11_BACKEND;GPU_D3D12_BACKEND</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.StartsWith('net6'))">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard2')) Or $(TargetFramework.StartsWith('net6'))">
     <Compile Include="D3D\**\*.cs" />
     <Compile Include="D3D11\**\*.cs" />
     <Compile Include="D3D12\**\*.cs" />

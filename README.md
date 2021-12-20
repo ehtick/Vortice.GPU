@@ -2,7 +2,7 @@
 ============================================================================
 
 [![Build status](https://github.com/amerkoleci/Vortice.GPU/workflows/Build/badge.svg)](https://github.com/amerkoleci/Vortice.GPU/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/amerkoleci/Vortice.GPU/blob/master/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/amerkoleci/Vortice.GPU/blob/main/LICENSE)
 
 **Vortice.GPU** is a low-level, cross-platform .NET GPU library that targets .NET Standard 2.0, .NET 6.0 and UAP.
 

@@ -34,5 +34,5 @@ jobs:
           if ( "${{github.ref}}" -match "^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$" ) {
               dotnet nuget push build/packages/**/*.nupkg -s "https://api.nuget.org/v3/index.json" -k ${{secrets.NUGET_TOKEN}}
           } else {
-              dotnet nuget push "build/packages/**/*.nupkg" --source https://nuget.pkg.github.com/amerkoleci/index.json --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+              echo "publish is only enabled by tagging with a release tag"
           }

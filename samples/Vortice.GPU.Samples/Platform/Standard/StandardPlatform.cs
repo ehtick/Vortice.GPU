@@ -18,8 +18,7 @@ internal class StandardPlatform : AppPlatform
         // Init SDL2
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
         {
-            SDL_Log($"Unable to initialize SDL: {SDL_GetError()}");
-            return;
+            throw new Exception($"Unable to initialize SDL: {SDL_GetError()}");
         }
 
         MainWindow = new SDL2Window();

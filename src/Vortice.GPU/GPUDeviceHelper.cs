@@ -10,15 +10,15 @@ internal static partial class GPUDeviceHelper
 {
     public static void Shutdown()
     {
-#if GPU_VULKAN_BACKEND
+#if !EXCLUDE_VULKAN_BACKEND
         Vulkan.VulkanGPUDeviceFactory.Shutdown();
 #endif
 
-#if GPU_D3D11_BACKEND
+#if !EXCLUDE_D3D11_BACKEND
         //D3D11.D3D11GPUDeviceFactory.Shutdown();
 #endif
 
-#if GPU_D3D12_BACKEND
+#if !EXCLUDE_D3D12_BACKEND
         //D3D12.D3D12GPUDeviceFactory.Shutdown();
 #endif
     }
@@ -33,7 +33,7 @@ internal static partial class GPUDeviceHelper
 
         switch (backend)
         {
-#if GPU_VULKAN_BACKEND
+#if !EXCLUDE_VULKAN_BACKEND
             case GPUBackend.Vulkan:
                 if (IsBackendSupported(GPUBackend.Vulkan))
                 {
@@ -43,7 +43,7 @@ internal static partial class GPUDeviceHelper
                 throw new GPUException($"{nameof(GPUBackend.Vulkan)} is not supported");
 #endif
 
-#if GPU_D3D11_BACKEND
+#if !EXCLUDE_D3D11_BACKEND
             case GPUBackend.Direct3D11:
                 if (IsBackendSupported(GPUBackend.Direct3D11))
                 {
@@ -53,7 +53,7 @@ internal static partial class GPUDeviceHelper
                 throw new GPUException($"{nameof(GPUBackend.Direct3D11)} is not supported");
 #endif
 
-#if GPU_D3D12_BACKEND
+#if !EXCLUDE_D3D12_BACKEND
             case GPUBackend.Direct3D12:
                 if (IsBackendSupported(GPUBackend.Direct3D12))
                 {
@@ -77,17 +77,17 @@ internal static partial class GPUDeviceHelper
 
         switch (backend)
         {
-#if GPU_VULKAN_BACKEND
+#if !EXCLUDE_VULKAN_BACKEND
             case GPUBackend.Vulkan:
                 return Vulkan.VulkanGPUDeviceFactory.IsSupported.Value;
 #endif
 
-#if GPU_D3D11_BACKEND
+#if !EXCLUDE_D3D11_BACKEND
             case GPUBackend.Direct3D11:
                 return D3D11.D3D11GPUDeviceFactory.IsSupported.Value;
 #endif
 
-#if GPU_D3D12_BACKEND
+#if !EXCLUDE_D3D12_BACKEND
             case GPUBackend.Direct3D12:
                 return D3D12.D3D12GPUDeviceFactory.IsSupported.Value;
 #endif
@@ -101,14 +101,14 @@ internal static partial class GPUDeviceHelper
     {
         if (PlatformInfo.IsWindows)
         {
-#if GPU_D3D12_BACKEND
+#if !EXCLUDE_D3D12_BACKEND
             if (D3D12.D3D12GPUDeviceFactory.IsSupported.Value)
                 return GPUBackend.Direct3D12;
 #endif
         }
         else if (PlatformInfo.IsAndroid || PlatformInfo.IsLinux)
         {
-#if GPU_VULKAN_BACKEND
+#if !EXCLUDE_VULKAN_BACKEND
             if (Vulkan.VulkanGPUDeviceFactory.IsSupported.Value)
                 return GPUBackend.Direct3D12;
 #endif

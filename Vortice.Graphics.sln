@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.GPU", "src\Vortice.GPU\Vortice.GPU.csproj", "{85FA4738-3A74-4E00-8BD4-CA11E31DE697}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{7DCE6069-7D8D-46D1-BC58-5BCC4FA369DE}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -18,13 +16,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{7DCE6069
 		version.json = version.json
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Graphics", "src\Vortice.Graphics\Vortice.Graphics.csproj", "{85FA4738-3A74-4E00-8BD4-CA11E31DE697}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8AA28606-CD13-4688-A6DF-4914A9FA7799}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{730591D4-043A-4EB9-9AD4-F1C01ABC71DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.GPU.Tests", "tests\Vortice.GPU.Tests\Vortice.GPU.Tests.csproj", "{FAB71726-FA0F-4670-8E66-9CAE0735820A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Graphics.Tests", "tests\Vortice.Graphics.Tests\Vortice.Graphics.Tests.csproj", "{FAB71726-FA0F-4670-8E66-9CAE0735820A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.GPU.Samples", "samples\Vortice.GPU.Samples\Vortice.GPU.Samples.csproj", "{26D7D327-F64B-47C4-8417-CA43CBFF8420}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vortice.Graphics.Samples", "samples\Vortice.Graphics.Samples\Vortice.Graphics.Samples.csproj", "{26D7D327-F64B-47C4-8417-CA43CBFF8420}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorld", "samples\HelloWorld\HelloWorld.csproj", "{B3B917CD-C049-442E-8EBD-4C2EA68D1556}"
 EndProject

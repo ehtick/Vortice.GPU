@@ -5,11 +5,11 @@
     <TargetFrameworks>net6.0</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);net6.0-windows$(WindowsTargetFrameworkVersion)</TargetFrameworks>
     <IsPackable>false</IsPackable>
-    <RootNamespace>Vortice.GPU.Samples</RootNamespace>
+    <RootNamespace>Vortice.Graphics.Samples</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vortice.GPU.Samples\Vortice.GPU.Samples.csproj" />
+    <ProjectReference Include="..\Vortice.Graphics.Samples\Vortice.Graphics.Samples.csproj" />
   </ItemGroup>
 
 </Project>

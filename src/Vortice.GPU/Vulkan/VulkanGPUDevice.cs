@@ -1,5 +1,5 @@
-// Copyright (c) Amer Koleci and contributors.
-// Distributed under the MIT license. See the LICENSE file in the project root for more information.
+// Copyright © Amer Koleci and Contributors.
+// Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using Vortice.Vulkan;
 using static Vortice.Vulkan.Vulkan;
@@ -35,7 +35,6 @@ internal unsafe class VulkanGPUDevice : GPUDevice
     private readonly VkPhysicalDeviceDynamicRenderingFeatures dynamicRenderingFeaturesKHR;
 
     public VulkanGPUDevice(VkPhysicalDevice physicalDevice)
-        : base(GPUBackend.Vulkan)
     {
         PhysicalDevice = physicalDevice;
 
@@ -238,6 +237,9 @@ internal unsafe class VulkanGPUDevice : GPUDevice
     public VkPhysicalDevice PhysicalDevice { get; }
 
     public VkDevice NativeDevice => _handle;
+
+    /// <inheritdoc />
+    public override GPUBackend Backend => GPUBackend.Vulkan;
 
     /// <inheritdoc />
     public override GPUDeviceInfo Info => _info;

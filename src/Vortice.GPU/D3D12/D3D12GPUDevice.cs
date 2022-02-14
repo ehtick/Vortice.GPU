@@ -1,5 +1,5 @@
-// Copyright (c) Amer Koleci and contributors.
-// Distributed under the MIT license. See the LICENSE file in the project root for more information.
+// Copyright © Amer Koleci and Contributors.
+// Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using Microsoft.Toolkit.Diagnostics;
 using Vortice.Direct3D;
@@ -16,7 +16,6 @@ internal unsafe class D3D12GPUDevice : GPUDevice
     private readonly GPUAdapterInfo _adapterInfo;
 
     public D3D12GPUDevice(IDXGIAdapter1 adapter, in GPUDeviceDescriptor descriptor)
-        : base(GPUBackend.Direct3D12)
     {
         Guard.IsNotNull(adapter, nameof(adapter));
 
@@ -186,6 +185,9 @@ internal unsafe class D3D12GPUDevice : GPUDevice
     public bool IsCacheCoherentUMA { get; }
 
     public bool SupportsRenderPass { get; }
+
+    /// <inheritdoc />
+    public override GPUBackend Backend => GPUBackend.D3D12;
 
     /// <inheritdoc />
     public override GPUDeviceInfo Info => _info;

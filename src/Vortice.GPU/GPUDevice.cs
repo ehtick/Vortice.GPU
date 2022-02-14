@@ -1,5 +1,5 @@
-// Copyright (c) Amer Koleci and contributors.
-// Distributed under the MIT license. See the LICENSE file in the project root for more information.
+// Copyright © Amer Koleci and Contributors.
+// Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using System.Runtime.CompilerServices;
 using Microsoft.Toolkit.Diagnostics;
@@ -10,11 +10,8 @@ public abstract class GPUDevice : IDisposable
 {
     private volatile int _isDisposed;
 
-    protected GPUDevice(GPUBackend backend)
+    protected GPUDevice()
     {
-        Guard.IsTrue(backend != GPUBackend.Count, nameof(backend));
-
-        Backend = backend;
     }
 
     /// <summary>
@@ -102,7 +99,7 @@ public abstract class GPUDevice : IDisposable
     /// <summary>
     /// Gets the <see cref="GPUBackend"/> of this device.
     /// </summary>
-    public GPUBackend Backend { get; }
+    public abstract GPUBackend Backend { get; }
 
     /// <summary>
     /// Get the device information, see <see cref="GPUDeviceInfo"/> for details.

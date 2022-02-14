@@ -28,9 +28,9 @@ public partial class InitializationTests
     {
         if (OperatingSystem.IsWindows())
         {
-            using GPUDevice device = GPUDevice.CreateDefault(GPUBackend.Direct3D11);
+            using GPUDevice device = GPUDevice.CreateDefault(GPUBackend.D3D11);
             Assert.IsTrue(device is not null);
-            Assert.AreEqual(device.Backend, GPUBackend.Direct3D11);
+            Assert.AreEqual(device.Backend, GPUBackend.D3D11);
         }
     }
 
@@ -39,9 +39,9 @@ public partial class InitializationTests
     {
         if (OperatingSystem.IsWindows())
         {
-            using GPUDevice device = GPUDevice.CreateDefault(GPUBackend.Direct3D12);
+            using GPUDevice device = GPUDevice.CreateDefault(GPUBackend.D3D12);
             Assert.IsTrue(device is not null);
-            Assert.AreEqual(device.Backend, GPUBackend.Direct3D12);
+            Assert.AreEqual(device.Backend, GPUBackend.D3D12);
         }
     }
 

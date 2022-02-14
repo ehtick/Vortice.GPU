@@ -28,7 +28,7 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Pack
-      run: dotnet pack Vortice.GPU.sln --configuration Release
+      run: dotnet pack Vortice.Graphics.sln --configuration Release
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2

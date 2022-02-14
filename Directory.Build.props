@@ -17,8 +17,8 @@
     <Owners>amerkoleci</Owners>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/amerkoleci/Vortice.GPU.git</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/amerkoleci/Vortice.GPU</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/amerkoleci/Vortice.Graphics.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/amerkoleci/Vortice.Graphics</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <Copyright>Copyright © 2022 Amer Koleci and Contributors</Copyright>
     <PackageOutputPath>$(MSBuildThisFileDirectory)packages</PackageOutputPath>

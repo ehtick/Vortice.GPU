@@ -6,7 +6,7 @@ namespace Vortice.GPU;
 /// <summary>
 /// Structure that describes the <see cref="Texture"/>.
 /// </summary>
-public readonly struct TextureDescriptor : IEquatable<TextureDescriptor>
+public record struct TextureDescriptor : IEquatable<TextureDescriptor>
 {
     public TextureDescriptor(
         TextureDimension dimension,
@@ -120,63 +120,5 @@ public readonly struct TextureDescriptor : IEquatable<TextureDescriptor>
             ++numMips;
 
         return numMips;
-    }
-
-    /// <summary>
-    /// Compares two <see cref="TextureDescriptor"/> objects for equality.
-    /// </summary>
-    /// <param name="left">The <see cref="TextureDescriptor"/> on the left hand of the operand.</param>
-    /// <param name="right">The <see cref="TextureDescriptor"/> on the right hand of the operand.</param>
-    /// <returns>
-    /// True if the current left is equal to the <paramref name="right"/> parameter; otherwise, false.
-    /// </returns>
-    public static bool operator ==(TextureDescriptor left, TextureDescriptor right) => left.Equals(right);
-
-    /// <summary>
-    /// Compares two <see cref="TextureDescriptor"/> objects for inequality.
-    /// </summary>
-    /// <param name="left">The <see cref="TextureDescriptor"/> on the left hand of the operand.</param>
-    /// <param name="right">The <see cref="TextureDescriptor"/> on the right hand of the operand.</param>
-    /// <returns>
-    /// True if the current left is unequal to the <paramref name="right"/> parameter; otherwise, false.
-    /// </returns>
-    public static bool operator !=(TextureDescriptor left, TextureDescriptor right) => !left.Equals(right);
-
-    /// <inheritdoc/>
-    public override bool Equals(object? obj) => obj is TextureDescriptor other && Equals(other);
-
-    /// <inheritdoc/>
-    public bool Equals(TextureDescriptor other)
-    {
-        return
-            Dimension == other.Dimension &&
-            Format == other.Format &&
-            Width == other.Width &&
-            Height == other.Height &&
-            DepthOrArraySize == other.DepthOrArraySize &&
-            MipLevels == other.MipLevels &&
-            SampleCount == other.SampleCount &&
-            Usage == other.Usage;
-    }
-
-    /// <summary>
-    /// Returns the hash code for this instance.
-    /// </summary>
-    /// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
-    public override int GetHashCode()
-    {
-        var hashCode = new HashCode();
-        {
-            hashCode.Add(Dimension);
-            hashCode.Add(Format);
-            hashCode.Add(Width);
-            hashCode.Add(Height);
-            hashCode.Add(DepthOrArraySize);
-            hashCode.Add(MipLevels);
-            hashCode.Add(SampleCount);
-            hashCode.Add(Usage);
-        }
-
-        return hashCode.ToHashCode();
     }
 }

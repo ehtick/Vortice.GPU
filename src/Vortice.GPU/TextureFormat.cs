@@ -4,7 +4,7 @@
 namespace Vortice.GPU;
 
 /// <summary>
-/// Defines texture format.
+/// Defines <see cref="Texture"/> format.
 /// </summary>
 public enum TextureFormat
 {

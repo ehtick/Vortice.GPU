@@ -2,6 +2,10 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 namespace Vortice.GPU;
+
+/// <summary>
+/// Class containing utility methods for <see cref="TextureFormat"/> enumeration.
+/// </summary>
 public static class TextureFormatUtils
 {
     /// <summary>

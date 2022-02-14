@@ -44,23 +44,23 @@ internal static partial class GPUDeviceHelper
 #endif
 
 #if !EXCLUDE_D3D11_BACKEND
-            case GPUBackend.Direct3D11:
-                if (IsBackendSupported(GPUBackend.Direct3D11))
+            case GPUBackend.D3D11:
+                if (IsBackendSupported(GPUBackend.D3D11))
                 {
                     return D3D11.D3D11GPUDeviceFactory.Create(descriptor);
                 }
 
-                throw new GPUException($"{nameof(GPUBackend.Direct3D11)} is not supported");
+                throw new GPUException($"{nameof(GPUBackend.D3D11)} is not supported");
 #endif
 
 #if !EXCLUDE_D3D12_BACKEND
-            case GPUBackend.Direct3D12:
-                if (IsBackendSupported(GPUBackend.Direct3D12))
+            case GPUBackend.D3D12:
+                if (IsBackendSupported(GPUBackend.D3D12))
                 {
                     return D3D12.D3D12GPUDeviceFactory.Create(descriptor);
                 }
 
-                throw new GPUException($"{nameof(GPUBackend.Direct3D12)} is not supported");
+                throw new GPUException($"{nameof(GPUBackend.D3D12)} is not supported");
 #endif
 
             default:
@@ -83,12 +83,12 @@ internal static partial class GPUDeviceHelper
 #endif
 
 #if !EXCLUDE_D3D11_BACKEND
-            case GPUBackend.Direct3D11:
+            case GPUBackend.D3D11:
                 return D3D11.D3D11GPUDeviceFactory.IsSupported.Value;
 #endif
 
 #if !EXCLUDE_D3D12_BACKEND
-            case GPUBackend.Direct3D12:
+            case GPUBackend.D3D12:
                 return D3D12.D3D12GPUDeviceFactory.IsSupported.Value;
 #endif
 
@@ -103,14 +103,14 @@ internal static partial class GPUDeviceHelper
         {
 #if !EXCLUDE_D3D12_BACKEND
             if (D3D12.D3D12GPUDeviceFactory.IsSupported.Value)
-                return GPUBackend.Direct3D12;
+                return GPUBackend.D3D12;
 #endif
         }
         else if (PlatformInfo.IsAndroid || PlatformInfo.IsLinux)
         {
 #if !EXCLUDE_VULKAN_BACKEND
             if (Vulkan.VulkanGPUDeviceFactory.IsSupported.Value)
-                return GPUBackend.Direct3D12;
+                return GPUBackend.D3D12;
 #endif
         }
         else if (PlatformInfo.IsMacOS)

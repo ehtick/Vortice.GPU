@@ -24,7 +24,6 @@ internal class D3D11GPUDevice : GPUDevice
     private readonly GPUAdapterInfo _adapterInfo;
 
     public D3D11GPUDevice(IDXGIAdapter1 adapter, in GPUDeviceDescriptor descriptor)
-        : base(GPUBackend.Direct3D11)
     {
         Guard.IsNotNull(adapter, nameof(adapter));
 
@@ -162,6 +161,9 @@ internal class D3D11GPUDevice : GPUDevice
     public ID3D11Device1 NativeDevice { get; }
     public ID3D11DeviceContext1 ImmediateContext { get; }
     public FeatureLevel FeatureLevel { get; }
+
+    /// <inheritdoc />
+    public override GPUBackend Backend => GPUBackend.D3D11;
 
     /// <inheritdoc />
     public override GPUDeviceInfo Info => _info;

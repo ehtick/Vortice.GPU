@@ -3,6 +3,9 @@
 
 namespace Vortice.GPU;
 
+/// <summary>
+/// Describes the dimension of <see cref="Texture"/>.
+/// </summary>
 public enum TextureDimension
 {
     Texture1D,

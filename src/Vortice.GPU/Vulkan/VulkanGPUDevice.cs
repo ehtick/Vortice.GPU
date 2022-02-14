@@ -32,7 +32,7 @@ internal unsafe class VulkanGPUDevice : GPUDevice
     private readonly VkPhysicalDeviceExtendedDynamicState2FeaturesEXT extended_dynamic_state2_features;
     private readonly VkPhysicalDeviceConditionalRenderingFeaturesEXT conditional_rendering_features;
     private readonly VkPhysicalDeviceDepthClipEnableFeaturesEXT depth_clip_enable_features;
-    private readonly VkPhysicalDeviceDynamicRenderingFeaturesKHR dynamicRenderingFeaturesKHR;
+    private readonly VkPhysicalDeviceDynamicRenderingFeatures dynamicRenderingFeaturesKHR;
 
     public VulkanGPUDevice(VkPhysicalDevice physicalDevice)
         : base(GPUBackend.Vulkan)

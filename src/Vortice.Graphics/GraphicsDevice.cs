@@ -75,23 +75,11 @@ public abstract class GraphicsDevice : IDisposable
     }
 
     /// <summary>
-    /// Create the default <see cref="GPUDevice"/> for given preferred backend.
+    ///  Create new instance of <see cref="GraphicsDevice"/> with given descriptor.
     /// </summary>
-    /// <param name="preferredBackend">The <see cref="GPUBackend"/> to use.</param>
-    /// <param name="validationMode">The <see cref="ValidationMode"/> to use.</param>
-    /// <returns>New instance of <see cref="GPUDevice"/>.</returns>
-    public static GraphicsDevice CreateDefault(GPUBackend preferredBackend = GPUBackend.Count, ValidationMode validationMode = ValidationMode.Disabled)
-    {
-        GPUDeviceDescriptor descriptor = new()
-        {
-            PreferredBackend = preferredBackend,
-            ValidationMode = validationMode
-        };
-
-        return GPUDeviceHelper.CreateDevice(descriptor);
-    }
-
-    public static GraphicsDevice Create(in GPUDeviceDescriptor descriptor)
+    /// <param name="descriptor">The optional <see cref="GPUDeviceDescriptor"/></param>
+    /// <returns>New instance of <see cref="GraphicsDevice"/> or throws <see cref="GraphicsException"/></returns>
+    public static GraphicsDevice Create(in GPUDeviceDescriptor? descriptor = default)
     {
         return GPUDeviceHelper.CreateDevice(descriptor);
     }

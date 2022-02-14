@@ -12,14 +12,19 @@ public partial class InitializationTests
     [TestMethod]
     public void IsSupported()
     {
-        using GraphicsDevice device = GraphicsDevice.CreateDefault(GPUBackend.Count);
+        using GraphicsDevice device = GraphicsDevice.Create();
         Assert.IsTrue(device is not null);
     }
 
     [TestMethod]
     public void IsValidationSupported()
     {
-        using GraphicsDevice device = GraphicsDevice.CreateDefault(GPUBackend.Count, ValidationMode.Enabled);
+        GPUDeviceDescriptor descriptor = new()
+        {
+            ValidationMode = ValidationMode.Enabled
+        };
+
+        using GraphicsDevice device = GraphicsDevice.Create(descriptor);
         Assert.IsTrue(device is not null);
     }
 
@@ -28,7 +33,12 @@ public partial class InitializationTests
     {
         if (OperatingSystem.IsWindows())
         {
-            using GraphicsDevice device = GraphicsDevice.CreateDefault(GPUBackend.D3D11);
+            GPUDeviceDescriptor descriptor = new()
+            {
+                PreferredBackend = GPUBackend.D3D11
+            };
+
+            using GraphicsDevice device = GraphicsDevice.Create(descriptor);
             Assert.IsTrue(device is not null);
             Assert.AreEqual(device.Backend, GPUBackend.D3D11);
         }
@@ -39,7 +49,12 @@ public partial class InitializationTests
     {
         if (OperatingSystem.IsWindows())
         {
-            using GraphicsDevice device = GraphicsDevice.CreateDefault(GPUBackend.D3D12);
+            GPUDeviceDescriptor descriptor = new()
+            {
+                PreferredBackend = GPUBackend.D3D12
+            };
+
+            using GraphicsDevice device = GraphicsDevice.Create(descriptor);
             Assert.IsTrue(device is not null);
             Assert.AreEqual(device.Backend, GPUBackend.D3D12);
         }
@@ -50,7 +65,12 @@ public partial class InitializationTests
     {
         if (GraphicsDevice.IsBackendSupported(GPUBackend.Vulkan))
         {
-            using GraphicsDevice device = GraphicsDevice.CreateDefault(GPUBackend.Vulkan);
+            GPUDeviceDescriptor descriptor = new()
+            {
+                PreferredBackend = GPUBackend.Vulkan
+            };
+
+            using GraphicsDevice device = GraphicsDevice.Create(descriptor);
             Assert.IsTrue(device is not null);
             Assert.AreEqual(device.Backend, GPUBackend.Vulkan);
         }

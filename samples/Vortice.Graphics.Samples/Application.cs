@@ -16,7 +16,13 @@ public abstract class Application : IDisposable
         _platform.Activated += OnPlatformActivated;
         _platform.Deactivated += OnPlatformDeactivated;
 
-        GraphicsDevice = GraphicsDevice.CreateDefault(preferredBackend, validationMode);
+        GPUDeviceDescriptor descriptor = new()
+        {
+            PreferredBackend = preferredBackend,
+            ValidationMode = validationMode
+        };
+
+        GraphicsDevice = GraphicsDevice.Create(descriptor);
     }
 
     public bool IsDisposed { get; private set; }

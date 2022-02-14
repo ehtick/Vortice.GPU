@@ -23,9 +23,10 @@ internal static partial class GPUDeviceHelper
 #endif
     }
 
-    public static GraphicsDevice CreateDevice(in GPUDeviceDescriptor descriptor)
+    public static GraphicsDevice CreateDevice(in GPUDeviceDescriptor? descriptor = default)
     {
-        GPUBackend backend = descriptor.PreferredBackend;
+        GPUDeviceDescriptor defaultDesc = descriptor ?? new GPUDeviceDescriptor();
+        GPUBackend backend = defaultDesc.PreferredBackend;
         if (backend == GPUBackend.Count)
         {
             backend = GetPlatformBackend();
@@ -37,7 +38,7 @@ internal static partial class GPUDeviceHelper
             case GPUBackend.Vulkan:
                 if (IsBackendSupported(GPUBackend.Vulkan))
                 {
-                    return Vulkan.VulkanGPUDeviceFactory.Create(descriptor);
+                    return Vulkan.VulkanGPUDeviceFactory.Create(defaultDesc);
                 }
 
                 throw new GraphicsException($"{nameof(GPUBackend.Vulkan)} is not supported");
@@ -47,7 +48,7 @@ internal static partial class GPUDeviceHelper
             case GPUBackend.D3D11:
                 if (IsBackendSupported(GPUBackend.D3D11))
                 {
-                    return D3D11.D3D11GPUDeviceFactory.Create(descriptor);
+                    return D3D11.D3D11GPUDeviceFactory.Create(defaultDesc);
                 }
 
                 throw new GraphicsException($"{nameof(GPUBackend.D3D11)} is not supported");
@@ -57,7 +58,7 @@ internal static partial class GPUDeviceHelper
             case GPUBackend.D3D12:
                 if (IsBackendSupported(GPUBackend.D3D12))
                 {
-                    return D3D12.D3D12GPUDeviceFactory.Create(descriptor);
+                    return D3D12.D3D12GPUDeviceFactory.Create(defaultDesc);
                 }
 
                 throw new GraphicsException($"{nameof(GPUBackend.D3D12)} is not supported");

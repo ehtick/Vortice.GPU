@@ -104,6 +104,22 @@ public abstract class GraphicsDevice : IDisposable
     /// </summary>
     public abstract void WaitIdle();
 
+    public Buffer CreateBuffer(in BufferDescriptor descriptor)
+    {
+        Guard.IsGreaterThanOrEqualTo(descriptor.Size, 1, nameof(BufferDescriptor.Size));
+
+        return CreateBufferCore(descriptor, IntPtr.Zero);
+    }
+
+    public unsafe Buffer CreateBuffer<T>(Span<T> data, BufferUsage usage = BufferUsage.ShaderReadWrite) where T : unmanaged
+    {
+        BufferDescriptor descriptor = new BufferDescriptor(usage, (ulong)(data.Length * sizeof(T)));
+        fixed (T* dataPtr = data)
+        {
+            return CreateBufferCore(descriptor, (IntPtr)dataPtr);
+        }
+    }
+
     public Texture CreateTexture(in TextureDescriptor descriptor)
     {
         Guard.IsGreaterThanOrEqualTo(descriptor.Width, 1, nameof(TextureDescriptor.Width));
@@ -113,5 +129,6 @@ public abstract class GraphicsDevice : IDisposable
         return CreateTextureCore(descriptor);
     }
 
+    protected abstract Buffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData);
     protected abstract Texture CreateTextureCore(in TextureDescriptor descriptor);
 }

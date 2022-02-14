@@ -260,5 +260,8 @@ internal unsafe class VulkanGPUDevice : GraphicsDevice
     }
 
     /// <inheritdoc />
+    protected override Buffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData) => default;
+
+    /// <inheritdoc />
     protected override Texture CreateTextureCore(in TextureDescriptor descriptor) => new VulkanTexture(this, descriptor);
 }

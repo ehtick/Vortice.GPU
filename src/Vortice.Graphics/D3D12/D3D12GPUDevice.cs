@@ -224,5 +224,8 @@ internal unsafe class D3D12GPUDevice : GraphicsDevice
     }
 
     /// <inheritdoc />
+    protected override Buffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData) => default;
+
+    /// <inheritdoc />
     protected override Texture CreateTextureCore(in TextureDescriptor descriptor) => new D3D12Texture(this, descriptor);
 }

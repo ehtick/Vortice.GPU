@@ -11,11 +11,16 @@ internal class SDL2Window : Window
 {
     private readonly IntPtr _window;
 
-    public SDL2Window(int width = 1200, int height = 800)
+    public SDL2Window(string title)
+        : base(title)
     {
         SDL_WindowFlags flags = SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN | SDL_WINDOW_RESIZABLE;
 
-        _window = SDL_CreateWindow("Vortice", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
+        _window = SDL_CreateWindow(title,
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            DefaultWindowSize.Width, DefaultWindowSize.Height,
+            flags);
 
         // Native handle
         var wmInfo = new SDL_SysWMinfo();
@@ -60,7 +65,7 @@ internal class SDL2Window : Window
     }
 
     /// <inheritdoc />
-    public override Size ClientSize
+    public override SizeI ClientSize
     {
         get
         {
@@ -78,5 +83,11 @@ internal class SDL2Window : Window
     public override void Hide()
     {
         SDL_HideWindow(_window);
+    }
+
+    /// <inheritdoc />
+    protected override void SetTitle(string title)
+    {
+        SDL_SetWindowTitle(_window, title);
     }
 }

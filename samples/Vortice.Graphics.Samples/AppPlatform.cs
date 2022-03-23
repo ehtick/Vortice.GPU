@@ -2,6 +2,7 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using System;
+using System.Reflection;
 
 namespace Vortice.Graphics.Samples;
 
@@ -64,4 +65,31 @@ internal abstract partial class AppPlatform : IDisposable
     {
         Deactivated?.Invoke(this, EventArgs.Empty);
     }
+
+    protected static string GetDefaultTitleName()
+    {
+        string assemblyTitle = GetAssemblyTitle(Assembly.GetEntryAssembly());
+        if (!string.IsNullOrEmpty(assemblyTitle))
+        {
+            return assemblyTitle;
+        }
+
+        return "Vortice";
+    }
+
+    private static string GetAssemblyTitle(Assembly assembly)
+    {
+        if (assembly == null)
+        {
+            return null;
+        }
+
+        AssemblyTitleAttribute[] array = (AssemblyTitleAttribute[])assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), inherit: true);
+        if (array != null && array.Length > 0)
+        {
+            return array[0].Title;
+        }
+        return null;
+    }
+
 }

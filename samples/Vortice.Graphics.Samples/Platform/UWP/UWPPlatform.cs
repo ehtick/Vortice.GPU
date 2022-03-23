@@ -19,7 +19,7 @@ internal sealed class UWPPlatform : AppPlatform, IFrameworkViewSource
         CoreApplication.Resuming += OnCoreApplicationResuming;
         CoreApplication.Suspending += OnCoreApplicationSuspending;
 
-        _mainWindow = new UWPWindow(this);
+        _mainWindow = new UWPWindow(this, GetDefaultTitleName());
     }
 
     // <inheritdoc />

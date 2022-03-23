@@ -16,12 +16,7 @@ public abstract class Application : IDisposable
         _platform.Activated += OnPlatformActivated;
         _platform.Deactivated += OnPlatformDeactivated;
 
-        GPUDeviceDescriptor descriptor = new()
-        {
-            PreferredBackend = preferredBackend,
-            ValidationMode = validationMode
-        };
-
+        GPUDeviceDescriptor descriptor = new(preferredBackend, validationMode);
         GraphicsDevice = GraphicsDevice.Create(descriptor);
     }
 
@@ -71,6 +66,8 @@ public abstract class Application : IDisposable
 
     internal void InitBeforeRun()
     {
+        MainWindow.Title += $" [{GraphicsDevice.Backend}]";
+
         Initialize();
     }
 

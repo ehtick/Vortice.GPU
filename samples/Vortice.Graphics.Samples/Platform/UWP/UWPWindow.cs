@@ -2,7 +2,6 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 using Vortice.Mathematics;
-using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
@@ -16,7 +15,8 @@ internal class UWPWindow : Window, IFrameworkView
     private CoreWindow? _coreWindow;
     private bool _windowClosed;
 
-    public UWPWindow(UWPPlatform platform)
+    public UWPWindow(UWPPlatform platform, string title)
+         : base(title)
     {
         _platform = platform;
     }
@@ -78,11 +78,11 @@ internal class UWPWindow : Window, IFrameworkView
     }
 
     /// <inheritdoc />
-    public override Size ClientSize
+    public override SizeI ClientSize
     {
         get
         {
-            return new((float)_coreWindow!.Bounds.Width, (float)_coreWindow!.Bounds.Height);
+            return new((int)_coreWindow!.Bounds.Width, (int)_coreWindow!.Bounds.Height);
         }
     }
 
@@ -97,5 +97,10 @@ internal class UWPWindow : Window, IFrameworkView
     {
         // TODO
         //_coreWindow.Visible = false;
+    }
+
+    protected override void SetTitle(string title)
+    {
+        ApplicationView.GetForCurrentView().Title = title;
     }
 }

@@ -84,9 +84,9 @@ internal unsafe class VulkanGPUDevice : GraphicsDevice
         List<string> enabledExtensions = new();
         enabledExtensions.Add(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
 
-        vkGetPhysicalDeviceFeatures2(PhysicalDevice, out features2);
+        vkGetPhysicalDeviceFeatures2(PhysicalDevice, &features2);
 
-        uint queueFamiliesCount = 0u;
+        int queueFamiliesCount = 0;
         vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamiliesCount, null);
         VkQueueFamilyProperties* queueFamilies = stackalloc VkQueueFamilyProperties[(int)queueFamiliesCount];
         vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamiliesCount, queueFamilies);

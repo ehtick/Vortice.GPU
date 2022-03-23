@@ -12,7 +12,7 @@ internal static unsafe class VulkanGPUDeviceFactory
 {
     private static readonly VkString s_EngineName = new VkString("Vortice");
     public static readonly Lazy<bool> IsSupported = new(CheckIsSupported);
-#if !NET5_0_OR_GREATER
+#if !NET6_0_OR_GREATER
     private static readonly PFN_vkDebugUtilsMessengerCallbackEXT DebugMessagerCallbackDelegate = DebugMessengerCallback;
 #endif
     private static VkInstance s_Instance;
@@ -156,8 +156,8 @@ internal static unsafe class VulkanGPUDeviceFactory
             {
                 debugUtilsCreateInfo.messageSeverity = VkDebugUtilsMessageSeverityFlagsEXT.Error | VkDebugUtilsMessageSeverityFlagsEXT.Warning;
                 debugUtilsCreateInfo.messageType = VkDebugUtilsMessageTypeFlagsEXT.Validation | VkDebugUtilsMessageTypeFlagsEXT.Performance;
-#if NET5_0_OR_GREATER
-            debugUtilsCreateInfo.pfnUserCallback = &DebugMessengerCallback;
+#if NET6_0_OR_GREATER
+                debugUtilsCreateInfo.pfnUserCallback = &DebugMessengerCallback;
 #else
                 debugUtilsCreateInfo.pfnUserCallback = Marshal.GetFunctionPointerForDelegate(DebugMessagerCallbackDelegate);
 #endif
@@ -217,7 +217,7 @@ internal static unsafe class VulkanGPUDeviceFactory
 
     private static string[] GetInstanceExtensions()
     {
-        uint count = 0;
+        int count = 0;
         VkResult result = vkEnumerateInstanceExtensionProperties((byte*)null, &count, null);
         if (result != VkResult.Success)
         {
@@ -229,7 +229,7 @@ internal static unsafe class VulkanGPUDeviceFactory
             return Array.Empty<string>();
         }
 
-        VkExtensionProperties* props = stackalloc VkExtensionProperties[(int)count];
+        VkExtensionProperties* props = stackalloc VkExtensionProperties[count];
         vkEnumerateInstanceExtensionProperties((byte*)null, &count, props);
 
         string[] extensions = new string[count];
@@ -322,8 +322,8 @@ internal static unsafe class VulkanGPUDeviceFactory
         return true;
     }
 
-#if NET5_0_OR_GREATER
-        [UnmanagedCallersOnly]
+#if NET6_0_OR_GREATER
+    [UnmanagedCallersOnly]
 #endif
     private static uint DebugMessengerCallback(VkDebugUtilsMessageSeverityFlagsEXT messageSeverity,
         VkDebugUtilsMessageTypeFlagsEXT messageTypes,

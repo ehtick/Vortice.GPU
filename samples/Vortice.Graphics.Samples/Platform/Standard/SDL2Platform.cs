@@ -6,13 +6,13 @@ using static SDL2.SDL.SDL_EventType;
 
 namespace Vortice.Graphics.Samples;
 
-internal class StandardPlatform : AppPlatform
+internal class SDL2Platform : AppPlatform
 {
     private const int _eventsPerPeep = 64;
     private readonly SDL_Event[] _events = new SDL_Event[_eventsPerPeep];
     private bool _exiting = false;
 
-    public StandardPlatform(Application application)
+    public SDL2Platform(Application application)
         : base(application)
     {
         // Init SDL2
@@ -21,7 +21,7 @@ internal class StandardPlatform : AppPlatform
             throw new Exception($"Unable to initialize SDL: {SDL_GetError()}");
         }
 
-        MainWindow = new SDL2Window();
+        MainWindow = new SDL2Window(GetDefaultTitleName());
     }
 
     // <inheritdoc />
@@ -83,6 +83,6 @@ internal partial class AppPlatform
 {
     public static AppPlatform Create(Application application)
     {
-        return new StandardPlatform(application);
+        return new SDL2Platform(application);
     }
 }

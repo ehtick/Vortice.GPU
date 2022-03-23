@@ -26,9 +26,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VorticeMathematicsVersion>1.4.4</VorticeMathematicsVersion>
-    <VorticeVulkanVersion>1.5.1</VorticeVulkanVersion>
-    <VorticeWindowsVersion>2.1.1-beta11</VorticeWindowsVersion>
+    <VorticeMathematicsVersion>1.4.7</VorticeMathematicsVersion>
+    <VorticeVulkanVersion>1.5.6</VorticeVulkanVersion>
+    <VorticeWindowsVersion>2.1.4-beta</VorticeWindowsVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
+  </ItemGroup>
 
 </Project>

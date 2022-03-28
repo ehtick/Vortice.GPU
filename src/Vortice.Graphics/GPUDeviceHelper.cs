@@ -26,8 +26,8 @@ internal static partial class GPUDeviceHelper
     public static GraphicsDevice CreateDevice(in GPUDeviceDescriptor? descriptor = default)
     {
         GPUDeviceDescriptor defaultDesc = descriptor ?? new GPUDeviceDescriptor();
-        GPUBackend backend = defaultDesc.PreferredBackend;
-        if (backend == GPUBackend.Count)
+        BackendType backend = defaultDesc.PreferredBackend;
+        if (backend == BackendType.Count)
         {
             backend = GetPlatformBackend();
         }
@@ -35,33 +35,33 @@ internal static partial class GPUDeviceHelper
         switch (backend)
         {
 #if !EXCLUDE_VULKAN_BACKEND
-            case GPUBackend.Vulkan:
-                if (IsBackendSupported(GPUBackend.Vulkan))
+            case BackendType.Vulkan:
+                if (IsBackendSupported(BackendType.Vulkan))
                 {
                     return Vulkan.VulkanGPUDeviceFactory.Create(defaultDesc);
                 }
 
-                throw new GraphicsException($"{nameof(GPUBackend.Vulkan)} is not supported");
+                throw new GraphicsException($"{nameof(BackendType.Vulkan)} is not supported");
 #endif
 
 #if !EXCLUDE_D3D11_BACKEND
-            case GPUBackend.D3D11:
-                if (IsBackendSupported(GPUBackend.D3D11))
+            case BackendType.D3D11:
+                if (IsBackendSupported(BackendType.D3D11))
                 {
                     return D3D11.D3D11GPUDeviceFactory.Create(defaultDesc);
                 }
 
-                throw new GraphicsException($"{nameof(GPUBackend.D3D11)} is not supported");
+                throw new GraphicsException($"{nameof(BackendType.D3D11)} is not supported");
 #endif
 
 #if !EXCLUDE_D3D12_BACKEND
-            case GPUBackend.D3D12:
-                if (IsBackendSupported(GPUBackend.D3D12))
+            case BackendType.D3D12:
+                if (IsBackendSupported(BackendType.D3D12))
                 {
                     return D3D12.D3D12GPUDeviceFactory.Create(defaultDesc);
                 }
 
-                throw new GraphicsException($"{nameof(GPUBackend.D3D12)} is not supported");
+                throw new GraphicsException($"{nameof(BackendType.D3D12)} is not supported");
 #endif
 
             default:
@@ -69,9 +69,9 @@ internal static partial class GPUDeviceHelper
         }
     }
 
-    public static bool IsBackendSupported(GPUBackend backend)
+    public static bool IsBackendSupported(BackendType backend)
     {
-        if (backend == GPUBackend.Count)
+        if (backend == BackendType.Count)
         {
             backend = GetPlatformBackend();
         }
@@ -79,17 +79,17 @@ internal static partial class GPUDeviceHelper
         switch (backend)
         {
 #if !EXCLUDE_VULKAN_BACKEND
-            case GPUBackend.Vulkan:
+            case BackendType.Vulkan:
                 return Vulkan.VulkanGPUDeviceFactory.IsSupported.Value;
 #endif
 
 #if !EXCLUDE_D3D11_BACKEND
-            case GPUBackend.D3D11:
+            case BackendType.D3D11:
                 return D3D11.D3D11GPUDeviceFactory.IsSupported.Value;
 #endif
 
 #if !EXCLUDE_D3D12_BACKEND
-            case GPUBackend.D3D12:
+            case BackendType.D3D12:
                 return D3D12.D3D12GPUDeviceFactory.IsSupported.Value;
 #endif
 
@@ -98,20 +98,20 @@ internal static partial class GPUDeviceHelper
         }
     }
 
-    public static GPUBackend GetPlatformBackend()
+    public static BackendType GetPlatformBackend()
     {
         if (PlatformInfo.IsWindows)
         {
 #if !EXCLUDE_D3D12_BACKEND
             if (D3D12.D3D12GPUDeviceFactory.IsSupported.Value)
-                return GPUBackend.D3D12;
+                return BackendType.D3D12;
 #endif
         }
         else if (PlatformInfo.IsAndroid || PlatformInfo.IsLinux)
         {
 #if !EXCLUDE_VULKAN_BACKEND
             if (Vulkan.VulkanGPUDeviceFactory.IsSupported.Value)
-                return GPUBackend.D3D12;
+                return BackendType.D3D12;
 #endif
         }
         else if (PlatformInfo.IsMacOS)
@@ -119,6 +119,6 @@ internal static partial class GPUDeviceHelper
             // TODO: Metal
         }
 
-        return GPUBackend.Count;
+        return BackendType.Count;
     }
 }

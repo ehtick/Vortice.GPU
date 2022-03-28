@@ -3,10 +3,11 @@
 
 namespace Vortice.Graphics;
 
-public enum GPUBackend : byte
+public enum BackendType : byte
 {
-    Vulkan,
+    Null,
     D3D11,
     D3D12,
+    Vulkan,
     Count
 }

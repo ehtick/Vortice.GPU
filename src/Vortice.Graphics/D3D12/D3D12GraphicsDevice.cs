@@ -10,12 +10,12 @@ using static Vortice.Direct3D12.D3D12;
 
 namespace Vortice.Graphics.D3D12;
 
-internal unsafe class D3D12GPUDevice : GraphicsDevice
+internal sealed class D3D12GraphicsDevice : GraphicsDevice
 {
     private readonly GPUDeviceInfo _info;
-    private readonly GPUAdapterInfo _adapterInfo;
+    private readonly GraphicsAdapterInfo _adapterInfo;
 
-    public D3D12GPUDevice(IDXGIAdapter1 adapter, in GPUDeviceDescriptor descriptor)
+    public D3D12GraphicsDevice(IDXGIAdapter1 adapter, in GPUDeviceDescriptor descriptor)
     {
         Guard.IsNotNull(adapter, nameof(adapter));
 
@@ -98,14 +98,14 @@ internal unsafe class D3D12GPUDevice : GraphicsDevice
         FeatureDataD3D12Options5 featureDataOptions5 = NativeDevice.Options5;
 
         // Init capabilites.
-        GPUAdapterType adapterType;
+        GraphicsAdapterType adapterType = GraphicsAdapterType.Unknown;
         if ((adapterDesc.Flags & AdapterFlags.Software) != 0)
         {
-            adapterType = GPUAdapterType.CPU;
+            adapterType = GraphicsAdapterType.CPU;
         }
         else
         {
-            adapterType = featureDataArchitecture.Uma ? GPUAdapterType.IntegratedGPU : GPUAdapterType.DiscreteGPU;
+            adapterType = featureDataArchitecture.Uma ? GraphicsAdapterType.Integrated : GraphicsAdapterType.Discrete;
             IsCacheCoherentUMA = featureDataArchitecture.CacheCoherentUMA;
         }
 
@@ -168,10 +168,10 @@ internal unsafe class D3D12GPUDevice : GraphicsDevice
 
         _adapterInfo = new()
         {
-            AdapterName = adapterDesc.Description,
+            VendorId = (VendorId)adapterDesc.VendorId,
+            DeviceId = (uint)adapterDesc.DeviceId,
+            Name = adapterDesc.Description,
             AdapterType = adapterType,
-            Vendor = (VendorId)adapterDesc.VendorId,
-            VendorId = (uint)adapterDesc.VendorId,
         };
     }
 
@@ -187,13 +187,13 @@ internal unsafe class D3D12GPUDevice : GraphicsDevice
     public bool SupportsRenderPass { get; }
 
     /// <inheritdoc />
-    public override GPUBackend Backend => GPUBackend.D3D12;
+    public override BackendType BackendType => BackendType.D3D12;
+
+    /// <inheritdoc />
+    public override GraphicsAdapterInfo AdapterInfo => _adapterInfo;
 
     /// <inheritdoc />
     public override GPUDeviceInfo Info => _info;
-
-    /// <inheritdoc />
-    public override GPUAdapterInfo AdapterInfo => _adapterInfo;
 
     /// <inheritdoc />
     protected override void OnDispose()

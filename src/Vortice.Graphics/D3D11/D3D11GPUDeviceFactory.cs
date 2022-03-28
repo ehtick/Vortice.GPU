@@ -49,7 +49,7 @@ internal static class D3D11GPUDeviceFactory
         return foundCompatibleDevice;
     }
 
-    public static D3D11GPUDevice Create(in GPUDeviceDescriptor descriptor)
+    public static D3D11GraphicsDevice Create(in GPUDeviceDescriptor descriptor)
     {
         using (IDXGIFactory2 factory = CreateDXGIFactory2<IDXGIFactory2>(descriptor.ValidationMode != ValidationMode.Disabled))
         {
@@ -108,7 +108,7 @@ internal static class D3D11GPUDeviceFactory
                 throw new GraphicsException("No Direct3D 11 device found");
             }
 
-            return new D3D11GPUDevice(adapter, descriptor);
+            return new D3D11GraphicsDevice(adapter, descriptor);
         }
     }
 }

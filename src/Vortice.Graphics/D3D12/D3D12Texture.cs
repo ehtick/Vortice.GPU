@@ -6,9 +6,9 @@ using static Vortice.Direct3D12.D3D12;
 
 namespace Vortice.Graphics.D3D12;
 
-internal unsafe class D3D12Texture : Texture
+internal class D3D12Texture : Texture
 {
-    public D3D12Texture(D3D12GPUDevice device, in TextureDescriptor descriptor)
+    public D3D12Texture(D3D12GraphicsDevice device, in TextureDescriptor descriptor)
         : base(device, descriptor)
     {
     }

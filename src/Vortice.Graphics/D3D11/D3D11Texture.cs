@@ -9,7 +9,7 @@ namespace Vortice.Graphics.D3D11;
 
 internal unsafe class D3D11Texture : Texture
 {
-    public D3D11Texture(D3D11GPUDevice device, in TextureDescriptor descriptor)
+    public D3D11Texture(D3D11GraphicsDevice device, in TextureDescriptor descriptor)
         : base(device, descriptor)
     {
         switch (descriptor.Dimension)

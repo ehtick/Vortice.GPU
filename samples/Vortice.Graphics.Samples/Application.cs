@@ -9,8 +9,9 @@ public abstract class Application : IDisposable
 
     public event EventHandler<EventArgs>? Disposed;
 
-
-    protected Application(GPUBackend preferredBackend = GPUBackend.Count, ValidationMode validationMode = ValidationMode.Disabled)
+    protected Application(
+        BackendType preferredBackend = BackendType.Count,
+        ValidationMode validationMode = ValidationMode.Disabled)
     {
         _platform = AppPlatform.Create(this);
         _platform.Activated += OnPlatformActivated;
@@ -66,7 +67,7 @@ public abstract class Application : IDisposable
 
     internal void InitBeforeRun()
     {
-        MainWindow.Title += $" [{GraphicsDevice.Backend}]";
+        MainWindow.Title += $" [{GraphicsDevice.BackendType}]";
 
         Initialize();
     }

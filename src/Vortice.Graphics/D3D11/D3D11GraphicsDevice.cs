@@ -10,7 +10,7 @@ using static Vortice.Direct3D11.D3D11;
 
 namespace Vortice.Graphics.D3D11;
 
-internal class D3D11GPUDevice : GraphicsDevice
+internal sealed class D3D11GraphicsDevice : GraphicsDevice
 {
     private static readonly FeatureLevel[] s_featureLevels = new[]
     {
@@ -20,10 +20,10 @@ internal class D3D11GPUDevice : GraphicsDevice
         FeatureLevel.Level_10_0
     };
 
+    private readonly GraphicsAdapterInfo _adapterInfo;
     private readonly GPUDeviceInfo _info;
-    private readonly GPUAdapterInfo _adapterInfo;
 
-    public D3D11GPUDevice(IDXGIAdapter1 adapter, in GPUDeviceDescriptor descriptor)
+    public D3D11GraphicsDevice(IDXGIAdapter1 adapter, in GPUDeviceDescriptor descriptor)
     {
         Guard.IsNotNull(adapter, nameof(adapter));
 
@@ -149,10 +149,10 @@ internal class D3D11GPUDevice : GraphicsDevice
 
             _adapterInfo = new()
             {
-                AdapterName = adapterDesc.Description,
-                AdapterType = GPUAdapterType.Unknown,
-                Vendor = (VendorId)adapterDesc.VendorId,
-                VendorId = (uint)adapterDesc.VendorId,
+                VendorId = (VendorId)adapterDesc.VendorId,
+                DeviceId = (uint)adapterDesc.DeviceId,
+                Name = adapterDesc.Description,
+                AdapterType = GraphicsAdapterType.Unknown,
             };
         }
     }
@@ -163,13 +163,13 @@ internal class D3D11GPUDevice : GraphicsDevice
     public FeatureLevel FeatureLevel { get; }
 
     /// <inheritdoc />
-    public override GPUBackend Backend => GPUBackend.D3D11;
+    public override BackendType BackendType => BackendType.D3D11;
 
     /// <inheritdoc />
     public override GPUDeviceInfo Info => _info;
 
     /// <inheritdoc />
-    public override GPUAdapterInfo AdapterInfo => _adapterInfo;
+    public override GraphicsAdapterInfo AdapterInfo => _adapterInfo;
 
     /// <inheritdoc />
     protected override void OnDispose()

@@ -33,35 +33,46 @@ internal static class D3D12GPUDeviceFactory
         }
 #endif
 
-        if (CreateDXGIFactory2(false, out IDXGIFactory4? dxgiFactory).Failure)
+        try
+        {
+            using (IDXGIFactory4 dxgiFactory = CreateDXGIFactory2<IDXGIFactory4>(false))
+            {
+                bool foundCompatibleDevice = false;
+                for (int adapterIndex = 0; dxgiFactory!.EnumAdapters1(adapterIndex, out IDXGIAdapter1 adapter).Success; adapterIndex++)
+                {
+                    AdapterDescription1 desc = adapter.Description1;
+
+                    // Don't select the Basic Render Driver adapter.
+                    if ((desc.Flags & AdapterFlags.Software) != AdapterFlags.None)
+                    {
+                        adapter.Dispose();
+
+                        continue;
+                    }
+
+                    if (IsSupported(adapter, FeatureLevel.Level_11_0))
+                    {
+                        adapter.Dispose();
+
+                        foundCompatibleDevice = true;
+                        break;
+                    }
+
+                    adapter.Dispose();
+                }
+
+                return foundCompatibleDevice;
+            }
+
+
+        }
+        catch
         {
             return false;
         }
-
-        bool foundCompatibleDevice = false;
-        for (int adapterIndex = 0; dxgiFactory!.EnumAdapters1(adapterIndex, out IDXGIAdapter1 adapter).Success; adapterIndex++)
-        {
-            AdapterDescription1 desc = adapter.Description1;
-
-            // Don't select the Basic Render Driver adapter.
-            if ((desc.Flags & AdapterFlags.Software) != AdapterFlags.None)
-            {
-                adapter.Dispose();
-
-                continue;
-            }
-
-            if (IsSupported(adapter, FeatureLevel.Level_11_0))
-            {
-                foundCompatibleDevice = true;
-                break;
-            }
-        }
-
-        return foundCompatibleDevice;
     }
 
-    public static D3D12GPUDevice Create(in GPUDeviceDescriptor descriptor)
+    public static D3D12GraphicsDevice Create(in GPUDeviceDescriptor descriptor)
     {
         using (IDXGIFactory4 factory = CreateDXGIFactory2<IDXGIFactory4>(descriptor.ValidationMode != ValidationMode.Disabled))
         {
@@ -129,7 +140,7 @@ internal static class D3D12GPUDeviceFactory
                 throw new GraphicsException("No Direct3D 12 device found");
             }
 
-            return new D3D12GPUDevice(adapter, descriptor);
+            return new D3D12GraphicsDevice(adapter, descriptor);
         }
     }
 }

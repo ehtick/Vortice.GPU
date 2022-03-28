@@ -3,10 +3,10 @@
 
 namespace Vortice.Graphics;
 
-public enum GPUAdapterType
+public enum GraphicsAdapterType
 {
-    DiscreteGPU,
-    IntegratedGPU,
+    Unknown,
+    Discrete,
+    Integrated,
     CPU,
-    Unknown
 }

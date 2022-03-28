@@ -11,7 +11,8 @@ class Program
 #if DEBUG
         validationMode = ValidationMode.Enabled;
 #endif
-        GPUBackend preferredBackend = GPUBackend.Count;
+        BackendType preferredBackend = BackendType.Count;
+        preferredBackend = BackendType.Vulkan;
 
         using HelloWorldApp app = new(preferredBackend, validationMode);
         app.Run();

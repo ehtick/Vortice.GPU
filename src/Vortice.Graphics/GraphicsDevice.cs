@@ -67,9 +67,9 @@ public abstract class GraphicsDevice : IDisposable
     /// <summary>
     /// Verify whether given backend is supported.
     /// </summary>
-    /// <param name="backend">The <see cref="GPUBackend"/> to check.</param>
+    /// <param name="backend">The <see cref="BackendType"/> to check.</param>
     /// <returns>True if supported, false otherwise.</returns>
-    public static bool IsBackendSupported(GPUBackend backend)
+    public static bool IsBackendSupported(BackendType backend)
     {
         return GPUDeviceHelper.IsBackendSupported(backend);
     }
@@ -85,19 +85,19 @@ public abstract class GraphicsDevice : IDisposable
     }
 
     /// <summary>
-    /// Gets the <see cref="GPUBackend"/> of this device.
+    /// Gets the <see cref="BackendType"/> of this device.
     /// </summary>
-    public abstract GPUBackend Backend { get; }
+    public abstract BackendType BackendType { get; }
+
+    /// <summary>
+    /// Get the GPU adapter information, see <see cref="GraphicsAdapterInfo"/> for details.
+    /// </summary>
+    public abstract GraphicsAdapterInfo AdapterInfo { get; }
 
     /// <summary>
     /// Get the device information, see <see cref="GPUDeviceInfo"/> for details.
     /// </summary>
     public abstract GPUDeviceInfo Info { get; }
-
-    /// <summary>
-    /// Get the GPU adapter information, see <see cref="GPUAdapterInfo"/> for details.
-    /// </summary>
-    public abstract GPUAdapterInfo AdapterInfo { get; }
 
     /// <summary>
     /// Wait for GPU to finish pending operations.

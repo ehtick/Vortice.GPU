@@ -6,11 +6,11 @@ using static Vortice.Vulkan.Vulkan;
 
 namespace Vortice.Graphics.Vulkan;
 
-internal unsafe class VulkanGPUDevice : GraphicsDevice
+internal unsafe class VulkanGraphicsDevice : GraphicsDevice
 {
     private readonly VkDevice _handle;
     private readonly GPUDeviceInfo _info;
-    private readonly GPUAdapterInfo _adapterInfo;
+    private readonly GraphicsAdapterInfo _adapterInfo;
 
     private readonly VkPhysicalDeviceProperties2 properties2;
     private readonly VkPhysicalDeviceVulkan11Properties properties_1_1;
@@ -34,7 +34,7 @@ internal unsafe class VulkanGPUDevice : GraphicsDevice
     private readonly VkPhysicalDeviceDepthClipEnableFeaturesEXT depth_clip_enable_features;
     private readonly VkPhysicalDeviceDynamicRenderingFeatures dynamicRenderingFeaturesKHR;
 
-    public VulkanGPUDevice(VkPhysicalDevice physicalDevice)
+    public VulkanGraphicsDevice(VkPhysicalDevice physicalDevice)
     {
         PhysicalDevice = physicalDevice;
 
@@ -206,31 +206,20 @@ internal unsafe class VulkanGPUDevice : GraphicsDevice
             }
         };
 
-        GPUAdapterType adapterType = GPUAdapterType.Unknown;
-        switch (properties.deviceType)
+        GraphicsAdapterType adapterType = properties.deviceType switch
         {
-            case VkPhysicalDeviceType.IntegratedGpu:
-                adapterType = GPUAdapterType.IntegratedGPU;
-                break;
-
-            case VkPhysicalDeviceType.DiscreteGpu:
-                adapterType = GPUAdapterType.DiscreteGPU;
-                break;
-            case VkPhysicalDeviceType.Cpu:
-                adapterType = GPUAdapterType.CPU;
-                break;
-
-            default:
-                adapterType = GPUAdapterType.Unknown;
-                break;
-        }
+            VkPhysicalDeviceType.IntegratedGpu => GraphicsAdapterType.Integrated,
+            VkPhysicalDeviceType.DiscreteGpu => GraphicsAdapterType.Discrete,
+            VkPhysicalDeviceType.Cpu => GraphicsAdapterType.CPU,
+            _ => GraphicsAdapterType.Unknown,
+        };
 
         _adapterInfo = new()
         {
-            AdapterName = properties.GetDeviceName(),
+            VendorId = (VendorId)properties.vendorID,
+            DeviceId = properties2.properties.deviceID,
+            Name = properties.GetDeviceName(),
             AdapterType = adapterType,
-            Vendor = (VendorId)properties.vendorID,
-            VendorId = properties.vendorID,
         };
     }
 
@@ -239,13 +228,13 @@ internal unsafe class VulkanGPUDevice : GraphicsDevice
     public VkDevice NativeDevice => _handle;
 
     /// <inheritdoc />
-    public override GPUBackend Backend => GPUBackend.Vulkan;
+    public override BackendType BackendType => BackendType.Vulkan;
+
+    /// <inheritdoc />
+    public override GraphicsAdapterInfo AdapterInfo => _adapterInfo;
 
     /// <inheritdoc />
     public override GPUDeviceInfo Info => _info;
-
-    /// <inheritdoc />
-    public override GPUAdapterInfo AdapterInfo => _adapterInfo;
 
     /// <inheritdoc />
     protected override void OnDispose()

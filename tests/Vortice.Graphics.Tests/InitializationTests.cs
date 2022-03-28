@@ -35,12 +35,12 @@ public partial class InitializationTests
         {
             GPUDeviceDescriptor descriptor = new()
             {
-                PreferredBackend = GPUBackend.D3D11
+                PreferredBackend = BackendType.D3D11
             };
 
             using GraphicsDevice device = GraphicsDevice.Create(descriptor);
             Assert.IsTrue(device is not null);
-            Assert.AreEqual(device.Backend, GPUBackend.D3D11);
+            Assert.AreEqual(device.BackendType, BackendType.D3D11);
         }
     }
 
@@ -51,28 +51,28 @@ public partial class InitializationTests
         {
             GPUDeviceDescriptor descriptor = new()
             {
-                PreferredBackend = GPUBackend.D3D12
+                PreferredBackend = BackendType.D3D12
             };
 
             using GraphicsDevice device = GraphicsDevice.Create(descriptor);
             Assert.IsTrue(device is not null);
-            Assert.AreEqual(device.Backend, GPUBackend.D3D12);
+            Assert.AreEqual(device.BackendType, BackendType.D3D12);
         }
     }
 
     [TestMethod]
     public void VulkanIsSupported()
     {
-        if (GraphicsDevice.IsBackendSupported(GPUBackend.Vulkan))
+        if (GraphicsDevice.IsBackendSupported(BackendType.Vulkan))
         {
             GPUDeviceDescriptor descriptor = new()
             {
-                PreferredBackend = GPUBackend.Vulkan
+                PreferredBackend = BackendType.Vulkan
             };
 
             using GraphicsDevice device = GraphicsDevice.Create(descriptor);
             Assert.IsTrue(device is not null);
-            Assert.AreEqual(device.Backend, GPUBackend.Vulkan);
+            Assert.AreEqual(device.BackendType, BackendType.Vulkan);
         }
     }
 }

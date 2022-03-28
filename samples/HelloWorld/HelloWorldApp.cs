@@ -5,7 +5,7 @@ namespace Vortice.Graphics.Samples;
 
 public class HelloWorldApp : Application
 {
-    public HelloWorldApp(GPUBackend preferredBackend = GPUBackend.Count, ValidationMode validationMode = ValidationMode.Disabled)
+    public HelloWorldApp(BackendType preferredBackend = BackendType.Count, ValidationMode validationMode = ValidationMode.Disabled)
         : base(preferredBackend, validationMode)
     {
     }

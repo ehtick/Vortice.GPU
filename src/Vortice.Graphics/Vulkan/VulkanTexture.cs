@@ -10,7 +10,7 @@ internal unsafe class VulkanTexture : Texture
 {
     private VkImage _handle;
 
-    public VulkanTexture(VulkanGPUDevice device, in TextureDescriptor descriptor)
+    public VulkanTexture(VulkanGraphicsDevice device, in TextureDescriptor descriptor)
         : base(device, descriptor)
     {
         //VkImageCreateInfo createInfo = new VkImageCreateInfo

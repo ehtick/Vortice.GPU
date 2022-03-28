@@ -49,7 +49,7 @@ internal static unsafe class VulkanGPUDeviceFactory
     {
     }
 
-    public static VulkanGPUDevice Create(in GPUDeviceDescriptor descriptor)
+    public static VulkanGraphicsDevice Create(in GPUDeviceDescriptor descriptor)
     {
         if (Instance.IsNull)
         {
@@ -212,7 +212,7 @@ internal static unsafe class VulkanGPUDeviceFactory
             throw new GraphicsException("Vulkan: Failed to find GPUs with Vulkan support");
         }
 
-        return new VulkanGPUDevice(physicalDevice);
+        return new VulkanGraphicsDevice(physicalDevice);
     }
 
     private static string[] GetInstanceExtensions()

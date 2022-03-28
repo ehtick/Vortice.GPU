@@ -9,12 +9,12 @@ namespace Vortice.Graphics;
 public record struct GPUDeviceDescriptor : IEquatable<GPUDeviceDescriptor>
 {
     public GPUDeviceDescriptor(ValidationMode validationMode, PowerPreference powerPreference)
-        : this(GPUBackend.Count, validationMode, powerPreference)
+        : this(BackendType.Count, validationMode, powerPreference)
     {
     }
 
     public GPUDeviceDescriptor(
-        GPUBackend preferredBackend,
+        BackendType preferredBackend,
         ValidationMode validationMode,
         PowerPreference powerPreference = PowerPreference.HighPerformance)
     {
@@ -24,9 +24,9 @@ public record struct GPUDeviceDescriptor : IEquatable<GPUDeviceDescriptor>
     }
 
     /// <summary>
-    /// Gets or sets the preferred <see cref="GPUBackend"/> to use.
+    /// Gets or sets the preferred <see cref="BackendType"/> to use.
     /// </summary>
-    public GPUBackend PreferredBackend { get; init; } = GPUBackend.Count;
+    public BackendType PreferredBackend { get; init; } = BackendType.Count;
 
     /// <summary>
     /// Gets or sets the <see cref="GPU.ValidationMode"/> to use.

@@ -68,16 +68,16 @@ internal abstract partial class AppPlatform : IDisposable
 
     protected static string GetDefaultTitleName()
     {
-        string assemblyTitle = GetAssemblyTitle(Assembly.GetEntryAssembly());
+        string? assemblyTitle = GetAssemblyTitle(Assembly.GetEntryAssembly());
         if (!string.IsNullOrEmpty(assemblyTitle))
         {
-            return assemblyTitle;
+            return assemblyTitle!;
         }
 
         return "Vortice";
     }
 
-    private static string GetAssemblyTitle(Assembly assembly)
+    private static string? GetAssemblyTitle(Assembly assembly)
     {
         if (assembly == null)
         {

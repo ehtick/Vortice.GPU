@@ -19,10 +19,7 @@ public partial class InitializationTests
     [TestMethod]
     public void IsValidationSupported()
     {
-        GPUDeviceDescriptor descriptor = new()
-        {
-            ValidationMode = ValidationMode.Enabled
-        };
+        GraphicsDeviceDescriptor descriptor = new(ValidationMode.Enabled);
 
         using GraphicsDevice device = GraphicsDevice.Create(descriptor);
         Assert.IsTrue(device is not null);
@@ -33,10 +30,7 @@ public partial class InitializationTests
     {
         if (OperatingSystem.IsWindows())
         {
-            GPUDeviceDescriptor descriptor = new()
-            {
-                PreferredBackend = BackendType.D3D11
-            };
+            GraphicsDeviceDescriptor descriptor = new(BackendType.D3D11);
 
             using GraphicsDevice device = GraphicsDevice.Create(descriptor);
             Assert.IsTrue(device is not null);
@@ -49,10 +43,7 @@ public partial class InitializationTests
     {
         if (OperatingSystem.IsWindows())
         {
-            GPUDeviceDescriptor descriptor = new()
-            {
-                PreferredBackend = BackendType.D3D12
-            };
+            GraphicsDeviceDescriptor descriptor = new(BackendType.D3D12);
 
             using GraphicsDevice device = GraphicsDevice.Create(descriptor);
             Assert.IsTrue(device is not null);
@@ -65,10 +56,7 @@ public partial class InitializationTests
     {
         if (GraphicsDevice.IsBackendSupported(BackendType.Vulkan))
         {
-            GPUDeviceDescriptor descriptor = new()
-            {
-                PreferredBackend = BackendType.Vulkan
-            };
+            GraphicsDeviceDescriptor descriptor = new(BackendType.Vulkan);
 
             using GraphicsDevice device = GraphicsDevice.Create(descriptor);
             Assert.IsTrue(device is not null);

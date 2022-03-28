@@ -26,6 +26,7 @@ public record struct TextureDescriptor : IEquatable<TextureDescriptor>
         MipLevels = mipLevels == 0 ? CountMipLevels(width, height, dimension == TextureDimension.Texture3D ? depthOrArraySize : 1) : mipLevels;
         SampleCount = sampleCount;
         Usage = usage;
+        Label = default;
     }
 
     public static TextureDescriptor Texture1D(
@@ -99,6 +100,11 @@ public record struct TextureDescriptor : IEquatable<TextureDescriptor>
     public int MipLevels { get; }
     public TextureUsage Usage { get; }
     public TextureSampleCount SampleCount { get; }
+
+    /// <summary>
+    /// Gets or sets the <see cref="Texture"/> label.
+    /// </summary>
+    public string? Label { get; init; }
 
     /// <summary>
     /// Returns the number of mip levels given a texture size

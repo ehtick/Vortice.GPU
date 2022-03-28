@@ -4,7 +4,7 @@
 namespace Vortice.Graphics;
 
 /// <summary>
-/// Defines a GPU buffer
+/// Defines a Graphics buffer.
 /// </summary>
 public abstract class Buffer : GraphicsResource
 {
@@ -13,7 +13,7 @@ public abstract class Buffer : GraphicsResource
     {
         Usage = descriptor.Usage;
         Size = descriptor.Size;
-        Label = descriptor.Label;
+        _label = descriptor.Label;
     }
 
     public BufferUsage Usage { get; }

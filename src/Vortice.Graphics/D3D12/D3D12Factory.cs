@@ -10,9 +10,11 @@ using static Vortice.Graphics.D3DUtils;
 
 namespace Vortice.Graphics.D3D12;
 
-internal static class D3D12GPUDeviceFactory
+internal static class D3D12Factory
 {
-    public static readonly Lazy<bool> IsSupported = new(CheckIsSupported);
+    private static readonly Lazy<bool> s_isSupported = new(CheckIsSupported);
+
+    public static bool IsSupported() => s_isSupported.Value;
 
     private static bool CheckIsSupported()
     {
@@ -38,7 +40,7 @@ internal static class D3D12GPUDeviceFactory
             using (IDXGIFactory4 dxgiFactory = CreateDXGIFactory2<IDXGIFactory4>(false))
             {
                 bool foundCompatibleDevice = false;
-                for (int adapterIndex = 0; dxgiFactory!.EnumAdapters1(adapterIndex, out IDXGIAdapter1 adapter).Success; adapterIndex++)
+                for (int adapterIndex = 0; dxgiFactory.EnumAdapters1(adapterIndex, out IDXGIAdapter1 adapter).Success; adapterIndex++)
                 {
                     AdapterDescription1 desc = adapter.Description1;
 
@@ -50,7 +52,7 @@ internal static class D3D12GPUDeviceFactory
                         continue;
                     }
 
-                    if (IsSupported(adapter, FeatureLevel.Level_11_0))
+                    if (Direct3D12.D3D12.IsSupported(adapter, FeatureLevel.Level_11_0))
                     {
                         adapter.Dispose();
 
@@ -63,8 +65,6 @@ internal static class D3D12GPUDeviceFactory
 
                 return foundCompatibleDevice;
             }
-
-
         }
         catch
         {
@@ -72,7 +72,7 @@ internal static class D3D12GPUDeviceFactory
         }
     }
 
-    public static D3D12GraphicsDevice Create(in GPUDeviceDescriptor descriptor)
+    public static D3D12GraphicsDevice Create(in GraphicsDeviceDescriptor descriptor)
     {
         using (IDXGIFactory4 factory = CreateDXGIFactory2<IDXGIFactory4>(descriptor.ValidationMode != ValidationMode.Disabled))
         {
@@ -96,7 +96,7 @@ internal static class D3D12GPUDeviceFactory
                         continue;
                     }
 
-                    if (IsSupported(adapter, FeatureLevel.Level_11_0))
+                    if (Direct3D12.D3D12.IsSupported(adapter, FeatureLevel.Level_11_0))
                     {
                         break;
                     }
@@ -119,7 +119,7 @@ internal static class D3D12GPUDeviceFactory
                         continue;
                     }
 
-                    if (IsSupported(adapter, FeatureLevel.Level_11_0))
+                    if (Direct3D12.D3D12.IsSupported(adapter, FeatureLevel.Level_11_0))
                     {
                         break;
                     }

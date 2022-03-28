@@ -3,7 +3,7 @@
 
 namespace Vortice.Graphics;
 
-public readonly struct GPUDeviceLimits
+public readonly struct GraphicsDeviceLimits
 {
     public uint MaxVertexAttributes { get; init; }
     public uint MaxVertexBindings { get; init; }
@@ -24,12 +24,10 @@ public readonly struct GPUDeviceLimits
     public uint MaxViewportWidth { get; init; }
     public uint MaxViewportHeight { get; init; }
     public uint MaxTessellationPatchSize { get; init; }
-    public uint MaxComputeSharedMemorySize { get; init; }
-    public uint MaxComputeWorkGroupCountX { get; init; }
-    public uint MaxComputeWorkGroupCountY { get; init; }
-    public uint MaxComputeWorkGroupCountZ { get; init; }
-    public uint MaxComputeWorkGroupInvocations { get; init; }
+    public uint MaxComputeWorkGroupStorageSize { get; init; }
+    public uint MaxComputeInvocationsPerWorkGroup { get; init; }
     public uint MaxComputeWorkGroupSizeX { get; init; }
     public uint MaxComputeWorkGroupSizeY { get; init; }
     public uint MaxComputeWorkGroupSizeZ { get; init; }
+    public uint MaxComputeWorkGroupsPerDimension { get; init; }
 }

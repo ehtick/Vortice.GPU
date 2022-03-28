@@ -7,7 +7,7 @@ using static Vortice.Graphics.D3DUtils;
 
 namespace Vortice.Graphics.D3D11;
 
-internal unsafe class D3D11Texture : Texture
+internal class D3D11Texture : Texture
 {
     public D3D11Texture(D3D11GraphicsDevice device, in TextureDescriptor descriptor)
         : base(device, descriptor)

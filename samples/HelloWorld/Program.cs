@@ -12,7 +12,7 @@ class Program
         validationMode = ValidationMode.Enabled;
 #endif
         BackendType preferredBackend = BackendType.Count;
-        preferredBackend = BackendType.Vulkan;
+        //preferredBackend = BackendType.Vulkan;
 
         using HelloWorldApp app = new(preferredBackend, validationMode);
         app.Run();

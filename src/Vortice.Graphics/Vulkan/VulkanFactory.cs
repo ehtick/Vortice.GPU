@@ -8,48 +8,35 @@ using static Vortice.Graphics.Vulkan.VulkanUtils;
 
 namespace Vortice.Graphics.Vulkan;
 
-internal static unsafe class VulkanGPUDeviceFactory
+internal static unsafe class VulkanFactory
 {
-    private static readonly VkString s_EngineName = new VkString("Vortice");
-    public static readonly Lazy<bool> IsSupported = new(CheckIsSupported);
+    private static readonly VkString s_engineName = new("Vortice");
+
 #if !NET6_0_OR_GREATER
     private static readonly PFN_vkDebugUtilsMessengerCallbackEXT DebugMessagerCallbackDelegate = DebugMessengerCallback;
 #endif
     private static VkInstance s_Instance;
     private static VkDebugUtilsMessengerEXT s_debugMessenger;
 
-    private static bool CheckIsSupported()
-    {
-        try
-        {
-            VkResult result = vkInitialize();
-            if (result != VkResult.Success)
-                return false;
-
-            // We require Vulkan 1.1 or higher
-            VkVersion version = vkEnumerateInstanceVersion();
-            if (version < VkVersion.Version_1_1)
-                return false;
-
-            // TODO: Enumerate physical devices and try to create instance.
-
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
     public static bool DebugUtils { get; private set; }
     public static VkInstance Instance => s_Instance;
-    public static VkDebugUtilsMessengerEXT DebugMessenger => s_debugMessenger;
 
     public static void Shutdown()
     {
+        if (s_debugMessenger != VkDebugUtilsMessengerEXT.Null)
+        {
+            vkDestroyDebugUtilsMessengerEXT(s_Instance, s_debugMessenger);
+            s_debugMessenger = VkDebugUtilsMessengerEXT.Null;
+        }
+
+        if (s_Instance != VkInstance.Null)
+        {
+            vkDestroyInstance(s_Instance);
+            s_Instance = VkInstance.Null;
+        }
     }
 
-    public static VulkanGraphicsDevice Create(in GPUDeviceDescriptor descriptor)
+    public static VulkanGraphicsDevice Create(in GraphicsDeviceDescriptor descriptor)
     {
         if (Instance.IsNull)
         {
@@ -58,12 +45,12 @@ internal static unsafe class VulkanGPUDeviceFactory
                 sType = VkStructureType.ApplicationInfo,
                 //pApplicationName = name,
                 //applicationVersion = new VkVersion(1, 0, 0),
-                pEngineName = s_EngineName,
+                pEngineName = s_engineName,
                 engineVersion = new VkVersion(1, 0, 0),
                 apiVersion = VkVersion.Version_1_2
             };
 
-            ReadOnlySpan<VkExtensionProperties> availableExtensions = vkEnumerateInstanceExtensionProperties();
+            HashSet<string> availableInstanceLayers = new(EnumerateInstanceLayers());
             HashSet<string> availableInstanceExtensions = new(GetInstanceExtensions());
 
             List<string> instanceLayers = new();
@@ -71,24 +58,20 @@ internal static unsafe class VulkanGPUDeviceFactory
             if (descriptor.ValidationMode != ValidationMode.Disabled)
             {
                 // Determine the optimal validation layers to enable that are necessary for useful debugging
-                GetOptimalValidationLayers(instanceLayers);
+                GetOptimalValidationLayers(availableInstanceLayers, instanceLayers);
             }
 
             List<string> instanceExtensions = new();
 
             // Check if VK_EXT_debug_utils is supported, which supersedes VK_EXT_Debug_Report
-            foreach (VkExtensionProperties availableExtension in availableExtensions)
+            foreach (string availableExtension in availableInstanceExtensions)
             {
-                if (availableExtension.GetExtensionName() == VK_EXT_DEBUG_UTILS_EXTENSION_NAME)
+                if (availableExtension == VK_EXT_DEBUG_UTILS_EXTENSION_NAME)
                 {
                     DebugUtils = true;
                     instanceExtensions.Add(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
                 }
-                else if (availableExtension.GetExtensionName() == VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME)
-                {
-                    instanceExtensions.Add(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
-                }
-                else if (availableExtension.GetExtensionName() == VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME)
+                else if (availableExtension == VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME)
                 {
                     instanceExtensions.Add(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME);
                 }
@@ -97,40 +80,29 @@ internal static unsafe class VulkanGPUDeviceFactory
             instanceExtensions.Add(VK_KHR_SURFACE_EXTENSION_NAME);
             if (PlatformInfo.IsWindows)
             {
-                instanceExtensions.Add("VK_KHR_win32_surface");
+                instanceExtensions.Add(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
             }
-            else if (PlatformInfo.IsLinux)
+            else if (PlatformInfo.IsAndroid)
             {
-                if (availableInstanceExtensions.Contains(VK_KHR_ANDROID_SURFACE_EXTENSION_NAME))
-                {
-                    instanceExtensions.Add(VK_KHR_ANDROID_SURFACE_EXTENSION_NAME);
-                }
-                if (availableInstanceExtensions.Contains("VK_KHR_xlib_surface"))
-                {
-                    instanceExtensions.Add("VK_KHR_xlib_surface");
-                }
-                if (availableInstanceExtensions.Contains("VK_KHR_wayland_surface"))
-                {
-                    instanceExtensions.Add("VK_KHR_wayland_surface");
-                }
+                instanceExtensions.Add(VK_KHR_ANDROID_SURFACE_EXTENSION_NAME);
             }
             else if (PlatformInfo.IsMacOS)
             {
-                if (availableInstanceExtensions.Contains("VK_EXT_metal_surface"))
+                instanceExtensions.Add(VK_EXT_METAL_SURFACE_EXTENSION_NAME);
+            }
+            else if (PlatformInfo.IsLinux)
+            {
+                if (availableInstanceExtensions.Contains(VK_KHR_XCB_SURFACE_EXTENSION_NAME))
                 {
-                    instanceExtensions.Add("VK_EXT_metal_surface");
+                    instanceExtensions.Add(VK_KHR_XCB_SURFACE_EXTENSION_NAME);
                 }
-                else
+                if (availableInstanceExtensions.Contains(VK_KHR_XLIB_SURFACE_EXTENSION_NAME))
                 {
-                    // Legacy MoltenVK extensions
-                    if (availableInstanceExtensions.Contains("VK_MVK_macos_surface"))
-                    {
-                        instanceExtensions.Add("VK_MVK_macos_surface");
-                    }
-                    if (availableInstanceExtensions.Contains("VK_MVK_ios_surface"))
-                    {
-                        instanceExtensions.Add("VK_MVK_ios_surface");
-                    }
+                    instanceExtensions.Add(VK_KHR_XLIB_SURFACE_EXTENSION_NAME);
+                }
+                if (availableInstanceExtensions.Contains(KHRWaylandSurfaceExtensionName))
+                {
+                    instanceExtensions.Add(KHRWaylandSurfaceExtensionName);
                 }
             }
 
@@ -156,6 +128,12 @@ internal static unsafe class VulkanGPUDeviceFactory
             {
                 debugUtilsCreateInfo.messageSeverity = VkDebugUtilsMessageSeverityFlagsEXT.Error | VkDebugUtilsMessageSeverityFlagsEXT.Warning;
                 debugUtilsCreateInfo.messageType = VkDebugUtilsMessageTypeFlagsEXT.Validation | VkDebugUtilsMessageTypeFlagsEXT.Performance;
+
+                if (descriptor.ValidationMode == ValidationMode.Verbose)
+                {
+                    debugUtilsCreateInfo.messageSeverity |= VkDebugUtilsMessageSeverityFlagsEXT.Verbose | VkDebugUtilsMessageSeverityFlagsEXT.Info;
+                }
+
 #if NET6_0_OR_GREATER
                 debugUtilsCreateInfo.pfnUserCallback = &DebugMessengerCallback;
 #else
@@ -170,7 +148,7 @@ internal static unsafe class VulkanGPUDeviceFactory
                 throw new InvalidOperationException($"Failed to create vulkan instance: {result}");
             }
 
-            vkLoadInstance(s_Instance);
+            vkLoadInstanceOnly(s_Instance);
 
             if (descriptor.ValidationMode != ValidationMode.Disabled && DebugUtils)
             {
@@ -178,18 +156,31 @@ internal static unsafe class VulkanGPUDeviceFactory
             }
         }
 
-        VkPhysicalDevice physicalDevice = VkPhysicalDevice.Null;
-        ReadOnlySpan<VkPhysicalDevice> physicalDevices = vkEnumeratePhysicalDevices(s_Instance);
-        foreach (VkPhysicalDevice candidatePhysicalDevice in physicalDevices)
+        // Find physical device, setup queue's and create device.
+        int physicalDevicesCount = 0;
+        vkEnumeratePhysicalDevices(s_Instance, &physicalDevicesCount, null).CheckResult();
+
+        if (physicalDevicesCount == 0)
         {
-            vkGetPhysicalDeviceProperties(candidatePhysicalDevice, out VkPhysicalDeviceProperties properties);
+            throw new GraphicsException("Vulkan: Failed to find GPUs with Vulkan support");
+        }
+
+        VkPhysicalDevice* physicalDevices = stackalloc VkPhysicalDevice[physicalDevicesCount];
+        vkEnumeratePhysicalDevices(s_Instance, &physicalDevicesCount, physicalDevices).CheckResult();
+
+        VkPhysicalDevice physicalDevice = VkPhysicalDevice.Null;
+        for (int i = 0; i < physicalDevicesCount; i++)
+        {
+            physicalDevice = physicalDevices[i];
+
+            vkGetPhysicalDeviceProperties(physicalDevice, out VkPhysicalDeviceProperties properties);
 
             bool discrete = properties.deviceType == VkPhysicalDeviceType.DiscreteGpu;
 
             if (discrete && descriptor.PowerPreference != PowerPreference.HighPerformance)
                 continue;
 
-            VulkanPhysicalDeviceExtensions physicalDeviceExt = QueryPhysicalDeviceExtensions(candidatePhysicalDevice);
+            VulkanPhysicalDeviceExtensions physicalDeviceExt = QueryPhysicalDeviceExtensions(physicalDevice);
             bool suitable = physicalDeviceExt.Swapchain && physicalDeviceExt.depth_clip_enable;
 
             if (!suitable)
@@ -197,13 +188,10 @@ internal static unsafe class VulkanGPUDeviceFactory
                 continue;
             }
 
-            if (discrete || physicalDevice.IsNull)
+            if (discrete)
             {
-                physicalDevice = candidatePhysicalDevice;
-                if (discrete)
-                {
-                    break; // if this is discrete GPU, look no further (prioritize discrete GPU)
-                }
+                // If this is discrete GPU, look no further (prioritize discrete GPU)
+                break; 
             }
         }
 
@@ -213,6 +201,37 @@ internal static unsafe class VulkanGPUDeviceFactory
         }
 
         return new VulkanGraphicsDevice(physicalDevice);
+    }
+
+    private static string[] EnumerateInstanceLayers()
+    {
+        if (!IsSupported())
+        {
+            return Array.Empty<string>();
+        }
+
+        int count = 0;
+        VkResult result = vkEnumerateInstanceLayerProperties(&count, null);
+        if (result != VkResult.Success)
+        {
+            return Array.Empty<string>();
+        }
+
+        if (count == 0)
+        {
+            return Array.Empty<string>();
+        }
+
+        VkLayerProperties* properties = stackalloc VkLayerProperties[count];
+        vkEnumerateInstanceLayerProperties(&count, properties).CheckResult();
+
+        string[] resultExt = new string[count];
+        for (int i = 0; i < count; i++)
+        {
+            resultExt[i] = properties[i].GetLayerName();
+        }
+
+        return resultExt;
     }
 
     private static string[] GetInstanceExtensions()
@@ -241,10 +260,8 @@ internal static unsafe class VulkanGPUDeviceFactory
         return extensions;
     }
 
-    private static void GetOptimalValidationLayers(List<string> instanceLayers)
+    private static void GetOptimalValidationLayers(HashSet<string> availableLayers, List<string> instanceLayers)
     {
-        ReadOnlySpan<VkLayerProperties> availableLayers = vkEnumerateInstanceLayerProperties();
-
         // The preferred validation layer is "VK_LAYER_KHRONOS_validation"
         List<string> validationLayers = new()
         {
@@ -298,14 +315,14 @@ internal static unsafe class VulkanGPUDeviceFactory
         }
     }
 
-    private static bool ValidateLayers(List<string> required, ReadOnlySpan<VkLayerProperties> availableLayers)
+    private static bool ValidateLayers(List<string> required, HashSet<string> availableLayers)
     {
         foreach (string layer in required)
         {
             bool found = false;
-            foreach (VkLayerProperties availableLayer in availableLayers)
+            foreach (string availableLayer in availableLayers)
             {
-                if (availableLayer.GetLayerName() == layer)
+                if (availableLayer == layer)
                 {
                     found = true;
                     break;
@@ -330,7 +347,7 @@ internal static unsafe class VulkanGPUDeviceFactory
         VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
         void* userData)
     {
-        string? message = Interop.GetString(pCallbackData->pMessage);
+        string message = Interop.GetString(pCallbackData->pMessage);
         if (messageTypes == VkDebugUtilsMessageTypeFlagsEXT.Validation)
         {
             if (messageSeverity == VkDebugUtilsMessageSeverityFlagsEXT.Error)

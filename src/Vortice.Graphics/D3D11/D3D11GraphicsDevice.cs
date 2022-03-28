@@ -21,9 +21,10 @@ internal sealed class D3D11GraphicsDevice : GraphicsDevice
     };
 
     private readonly GraphicsAdapterInfo _adapterInfo;
-    private readonly GPUDeviceInfo _info;
+    private readonly GraphicsDeviceFeatures _features;
+    private readonly GraphicsDeviceLimits _limits;
 
-    public D3D11GraphicsDevice(IDXGIAdapter1 adapter, in GPUDeviceDescriptor descriptor)
+    public D3D11GraphicsDevice(IDXGIAdapter1 adapter, in GraphicsDeviceDescriptor descriptor)
     {
         Guard.IsNotNull(adapter, nameof(adapter));
 
@@ -96,63 +97,60 @@ internal sealed class D3D11GraphicsDevice : GraphicsDevice
 
             // Init capabilites.
             AdapterDescription1 adapterDesc = adapter.Description1;
-
-            _info = new()
-            {
-                Features = new()
-                {
-                    IndependentBlend = true,
-                    ComputeShader = true,
-                    TessellationShader = true,
-                    MultiViewport = true,
-                    IndexUInt32 = true,
-                    MultiDrawIndirect = true,
-                    FillModeNonSolid = true,
-                    SamplerAnisotropy = true,
-                    TextureCompressionETC2 = false,
-                    TextureCompressionASTC_LDR = false,
-                    TextureCompressionBC = true,
-                    TextureCubeArray = true,
-                    Raytracing = false
-                },
-                Limits = new()
-                {
-                    MaxVertexAttributes = 16,
-                    MaxVertexBindings = 16,
-                    MaxVertexAttributeOffset = 2047,
-                    MaxVertexBindingStride = 2048,
-                    MaxTextureDimension1D = 16384,
-                    MaxTextureDimension2D = 16384,
-                    MaxTextureDimension3D = 2048,
-                    MaxTextureDimensionCube = 16384,
-                    MaxTextureArrayLayers = 2048,
-                    MaxColorAttachments = 8,
-                    //MaxUniformBufferRange = RequestConstantBufferElementCount * 16,
-                    //MaxStorageBufferRange = uint.MaxValue,
-                    //MinUniformBufferOffsetAlignment = ConstantBufferDataPlacementAlignment,
-                    //MinStorageBufferOffsetAlignment = 16u,
-                    //MaxSamplerAnisotropy = MaxMaxAnisotropy,
-                    MaxViewports = 16,
-                    MaxViewportWidth = 32767,
-                    MaxViewportHeight = 32767,
-                    MaxTessellationPatchSize = 32,
-                    //MaxComputeSharedMemorySize = ComputeShaderThreadLocalTempRegisterPool,
-                    //MaxComputeWorkGroupCountX = ComputeShaderDispatchMaxThreadGroupsPerDimension,
-                    //MaxComputeWorkGroupCountY = ComputeShaderDispatchMaxThreadGroupsPerDimension,
-                    //MaxComputeWorkGroupCountZ = ComputeShaderDispatchMaxThreadGroupsPerDimension,
-                    //MaxComputeWorkGroupInvocations = ComputeShaderThreadGroupMaxThreadsPerGroup,
-                    //MaxComputeWorkGroupSizeX = ComputeShaderThreadGroupMaxX,
-                    //MaxComputeWorkGroupSizeY = ComputeShaderThreadGroupMaxY,
-                    //MaxComputeWorkGroupSizeZ = ComputeShaderThreadGroupMaxZ,
-                }
-            };
-
             _adapterInfo = new()
             {
                 VendorId = (VendorId)adapterDesc.VendorId,
                 DeviceId = (uint)adapterDesc.DeviceId,
                 Name = adapterDesc.Description,
                 AdapterType = GraphicsAdapterType.Unknown,
+            };
+
+            _features = new()
+            {
+                IndependentBlend = true,
+                ComputeShader = true,
+                TessellationShader = true,
+                MultiViewport = true,
+                IndexUInt32 = true,
+                MultiDrawIndirect = true,
+                FillModeNonSolid = true,
+                SamplerAnisotropy = true,
+                TextureCompressionETC2 = false,
+                TextureCompressionASTC_LDR = false,
+                TextureCompressionBC = true,
+                TextureCubeArray = true,
+                Raytracing = false
+            };
+
+            _limits = new()
+            {
+                MaxVertexAttributes = 16,
+                MaxVertexBindings = 16,
+                MaxVertexAttributeOffset = 2047,
+                MaxVertexBindingStride = 2048,
+                MaxTextureDimension1D = 16384,
+                MaxTextureDimension2D = 16384,
+                MaxTextureDimension3D = 2048,
+                MaxTextureDimensionCube = 16384,
+                MaxTextureArrayLayers = 2048,
+                MaxColorAttachments = 8,
+                //MaxUniformBufferRange = RequestConstantBufferElementCount * 16,
+                //MaxStorageBufferRange = uint.MaxValue,
+                //MinUniformBufferOffsetAlignment = ConstantBufferDataPlacementAlignment,
+                //MinStorageBufferOffsetAlignment = 16u,
+                //MaxSamplerAnisotropy = MaxMaxAnisotropy,
+                MaxViewports = 16,
+                MaxViewportWidth = 32767,
+                MaxViewportHeight = 32767,
+                MaxTessellationPatchSize = 32,
+                //MaxComputeSharedMemorySize = ComputeShaderThreadLocalTempRegisterPool,
+                //MaxComputeWorkGroupCountX = ComputeShaderDispatchMaxThreadGroupsPerDimension,
+                //MaxComputeWorkGroupCountY = ComputeShaderDispatchMaxThreadGroupsPerDimension,
+                //MaxComputeWorkGroupCountZ = ComputeShaderDispatchMaxThreadGroupsPerDimension,
+                //MaxComputeWorkGroupInvocations = ComputeShaderThreadGroupMaxThreadsPerGroup,
+                //MaxComputeWorkGroupSizeX = ComputeShaderThreadGroupMaxX,
+                //MaxComputeWorkGroupSizeY = ComputeShaderThreadGroupMaxY,
+                //MaxComputeWorkGroupSizeZ = ComputeShaderThreadGroupMaxZ,
             };
         }
     }
@@ -166,10 +164,13 @@ internal sealed class D3D11GraphicsDevice : GraphicsDevice
     public override BackendType BackendType => BackendType.D3D11;
 
     /// <inheritdoc />
-    public override GPUDeviceInfo Info => _info;
+    public override GraphicsAdapterInfo AdapterInfo => _adapterInfo;
 
     /// <inheritdoc />
-    public override GraphicsAdapterInfo AdapterInfo => _adapterInfo;
+    public override GraphicsDeviceFeatures Features => _features;
+
+    /// <inheritdoc />
+    public override GraphicsDeviceLimits Limits => _limits;
 
     /// <inheritdoc />
     protected override void OnDispose()
@@ -204,7 +205,7 @@ internal sealed class D3D11GraphicsDevice : GraphicsDevice
     }
 
     /// <inheritdoc />
-    protected override Buffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData) => default;
+    protected override Buffer CreateBufferCore(in BufferDescriptor descriptor, IntPtr initialData) => new D3D11Buffer(this, descriptor, initialData);
 
     /// <inheritdoc />
     protected override Texture CreateTextureCore(in TextureDescriptor descriptor) => new D3D11Texture(this, descriptor);

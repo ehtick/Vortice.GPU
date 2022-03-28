@@ -17,6 +17,7 @@ public abstract class Texture : GraphicsResource
         MipLevels = descriptor.MipLevels;
         SampleCount = descriptor.SampleCount;
         Usage = descriptor.Usage;
+        _label = descriptor.Label;
     }
 
     public int CalculateSubresource(int mipSlice, int arraySlice, int planeSlice = 0)

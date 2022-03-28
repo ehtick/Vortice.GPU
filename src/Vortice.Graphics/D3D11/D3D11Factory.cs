@@ -10,9 +10,11 @@ using static Vortice.Graphics.D3DUtils;
 
 namespace Vortice.Graphics.D3D11;
 
-internal static class D3D11GPUDeviceFactory
+internal static class D3D11Factory
 {
-    public static readonly Lazy<bool> IsSupported = new(CheckIsSupported);
+    private static readonly Lazy<bool> s_isSupported = new(CheckIsSupported);
+
+    public static bool IsSupported() => s_isSupported.Value;
 
     private static bool CheckIsSupported()
     {
@@ -49,7 +51,7 @@ internal static class D3D11GPUDeviceFactory
         return foundCompatibleDevice;
     }
 
-    public static D3D11GraphicsDevice Create(in GPUDeviceDescriptor descriptor)
+    public static D3D11GraphicsDevice Create(in GraphicsDeviceDescriptor descriptor)
     {
         using (IDXGIFactory2 factory = CreateDXGIFactory2<IDXGIFactory2>(descriptor.ValidationMode != ValidationMode.Disabled))
         {

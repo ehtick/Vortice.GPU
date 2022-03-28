@@ -1,8 +1,6 @@
 ﻿// Copyright © Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
-using System.Runtime.InteropServices;
-
 namespace Vortice.Graphics;
 
 internal static class PlatformInfo
@@ -19,7 +17,7 @@ internal static class PlatformInfo
 
     public static bool IsArm { get; }
 
-    public static bool Is64BitOperatingSystem { get; }
+    public static bool Is64Bit { get; }
 
     static PlatformInfo()
     {
@@ -32,9 +30,9 @@ internal static class PlatformInfo
 		var arch = Package.Current.Id.Architecture;
 		const ProcessorArchitecture arm64 = (ProcessorArchitecture)12;
 		IsArm = arch == ProcessorArchitecture.Arm || arch == arm64;
-        Is64BitOperatingSystem = IntPtr.Size == 8;
+        Is64Bit = IntPtr.Size == 8;
 #elif NET6_0_OR_GREATER
-        IsMacOS = OperatingSystem.IsMacOS() || OperatingSystem.IsMacCatalyst();
+        IsMacOS = OperatingSystem.IsMacOS() || OperatingSystem.IsMacCatalyst() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS();
         IsLinux = OperatingSystem.IsLinux();
         IsUnix = IsMacOS || IsLinux;
         IsWindows = OperatingSystem.IsWindows();
@@ -42,7 +40,7 @@ internal static class PlatformInfo
 
         var arch = RuntimeInformation.ProcessArchitecture;
         IsArm = arch == Architecture.Arm || arch == Architecture.Arm64;
-        Is64BitOperatingSystem = Environment.Is64BitOperatingSystem;
+        Is64Bit = Environment.Is64BitOperatingSystem;
 #else
         IsMacOS = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
         IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
@@ -52,7 +50,7 @@ internal static class PlatformInfo
 
         var arch = RuntimeInformation.ProcessArchitecture;
         IsArm = arch == Architecture.Arm || arch == Architecture.Arm64;
-        Is64BitOperatingSystem = IntPtr.Size == 8;
+        Is64Bit = IntPtr.Size == 8;
 #endif
     }
 }

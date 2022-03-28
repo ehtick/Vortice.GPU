@@ -2,7 +2,11 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
 namespace Vortice.Graphics;
-public readonly struct GPUDeviceFeatures
+
+/// <summary>
+/// Defines features supported by <see cref="GraphicsDevice"/>.
+/// </summary>
+public readonly struct GraphicsDeviceFeatures
 {
     public bool IndependentBlend { get; init; }
     public bool ComputeShader { get; init; }

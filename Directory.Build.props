@@ -27,7 +27,6 @@
 
   <PropertyGroup>
     <VorticeMathematicsVersion>1.4.7</VorticeMathematicsVersion>
-    <VorticeVulkanVersion>1.5.6</VorticeVulkanVersion>
     <VorticeWindowsVersion>2.1.4-beta</VorticeWindowsVersion>
   </PropertyGroup>
 

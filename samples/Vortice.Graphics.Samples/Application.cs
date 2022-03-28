@@ -17,9 +17,15 @@ public abstract class Application : IDisposable
         _platform.Activated += OnPlatformActivated;
         _platform.Deactivated += OnPlatformDeactivated;
 
-        GPUDeviceDescriptor descriptor = new(preferredBackend, validationMode);
+        GraphicsDeviceDescriptor descriptor = new(preferredBackend, validationMode);
         GraphicsDevice = GraphicsDevice.Create(descriptor);
     }
+
+    #region Events
+    public event EventHandler<EventArgs>? Activated;
+
+    public event EventHandler<EventArgs>? Deactivated;
+    #endregion Events
 
     public bool IsDisposed { get; private set; }
     public Window MainWindow => _platform.MainWindow;
@@ -27,13 +33,9 @@ public abstract class Application : IDisposable
     public bool IsActive => _platform.IsActive;
 
     /// <summary>
-    /// Gets the <see cref="GraphicsDevice"/> used for rendering.
+    /// Gets the <see cref="Graphics.GraphicsDevice"/> used for rendering.
     /// </summary>
     public GraphicsDevice GraphicsDevice { get; }
-
-    public event EventHandler<EventArgs>? Activated;
-
-    public event EventHandler<EventArgs>? Deactivated;
 
     ~Application()
     {

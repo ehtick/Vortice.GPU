@@ -77,9 +77,9 @@ public abstract class GraphicsDevice : IDisposable
     /// <summary>
     ///  Create new instance of <see cref="GraphicsDevice"/> with given descriptor.
     /// </summary>
-    /// <param name="descriptor">The optional <see cref="GPUDeviceDescriptor"/></param>
+    /// <param name="descriptor">The optional <see cref="GraphicsDeviceDescriptor"/></param>
     /// <returns>New instance of <see cref="GraphicsDevice"/> or throws <see cref="GraphicsException"/></returns>
-    public static GraphicsDevice Create(in GPUDeviceDescriptor? descriptor = default)
+    public static GraphicsDevice Create(in GraphicsDeviceDescriptor? descriptor = default)
     {
         return GPUDeviceHelper.CreateDevice(descriptor);
     }
@@ -95,9 +95,14 @@ public abstract class GraphicsDevice : IDisposable
     public abstract GraphicsAdapterInfo AdapterInfo { get; }
 
     /// <summary>
-    /// Get the device information, see <see cref="GPUDeviceInfo"/> for details.
+    /// Get the supported device features, see <see cref="GraphicsDeviceFeatures"/> for details.
     /// </summary>
-    public abstract GPUDeviceInfo Info { get; }
+    public abstract GraphicsDeviceFeatures Features { get; }
+
+    /// <summary>
+    /// Get the supported device limits, see <see cref="GraphicsDeviceLimits"/> for details.
+    /// </summary>
+    public abstract GraphicsDeviceLimits Limits { get; }
 
     /// <summary>
     /// Wait for GPU to finish pending operations.
@@ -106,14 +111,14 @@ public abstract class GraphicsDevice : IDisposable
 
     public Buffer CreateBuffer(in BufferDescriptor descriptor)
     {
-        Guard.IsGreaterThanOrEqualTo(descriptor.Size, 1, nameof(BufferDescriptor.Size));
+        Guard.IsGreaterThanOrEqualTo(descriptor.Size, 1, nameof(Buffer.Size));
 
         return CreateBufferCore(descriptor, IntPtr.Zero);
     }
 
     public unsafe Buffer CreateBuffer<T>(Span<T> data, BufferUsage usage = BufferUsage.ShaderReadWrite) where T : unmanaged
     {
-        BufferDescriptor descriptor = new BufferDescriptor(usage, (ulong)(data.Length * sizeof(T)));
+        BufferDescriptor descriptor = new((ulong)(data.Length * sizeof(T)), usage);
         fixed (T* dataPtr = data)
         {
             return CreateBufferCore(descriptor, (IntPtr)dataPtr);

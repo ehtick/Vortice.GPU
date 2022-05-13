@@ -15,20 +15,20 @@ internal class D3D11Buffer : Buffer
     {
         BufferDescription d3d11Desc = new()
         {
-            SizeInBytes = (int)descriptor.Size,
+            ByteWidth = (int)descriptor.Size,
             Usage = ResourceUsage.Default,
             BindFlags = BindFlags.ShaderResource,
-            CpuAccessFlags = CpuAccessFlags.None,
-            OptionFlags = ResourceOptionFlags.None,
+            CPUAccessFlags = CpuAccessFlags.None,
+            MiscFlags = ResourceOptionFlags.None,
             StructureByteStride = 0
         };
 
         if (descriptor.Usage.HasFlag(BufferUsage.Uniform))
         {
-            d3d11Desc.SizeInBytes = (int)MathHelper.AlignUp((uint)d3d11Desc.SizeInBytes, 64u);
+            d3d11Desc.ByteWidth = (int)MathHelper.AlignUp((uint)d3d11Desc.ByteWidth, 64u);
             d3d11Desc.Usage = ResourceUsage.Dynamic;
             d3d11Desc.BindFlags = BindFlags.ConstantBuffer;
-            d3d11Desc.CpuAccessFlags = CpuAccessFlags.Write;
+            d3d11Desc.CPUAccessFlags = CpuAccessFlags.Write;
         }
         else
         {
@@ -65,17 +65,17 @@ internal class D3D11Buffer : Buffer
 
             if (descriptor.Usage.HasFlag(BufferUsage.Indirect))
             {
-                d3d11Desc.OptionFlags |= ResourceOptionFlags.DrawIndirectArguments;
+                d3d11Desc.MiscFlags |= ResourceOptionFlags.DrawIndirectArguments;
             }
 
             if (byteAddressBuffer)
             {
-                d3d11Desc.OptionFlags |= ResourceOptionFlags.BufferAllowRawViews;
+                d3d11Desc.MiscFlags |= ResourceOptionFlags.BufferAllowRawViews;
             }
             else if (structuredBuffer)
             {
                 //bufferDesc.StructureByteStride = desc->stride;
-                d3d11Desc.OptionFlags |= ResourceOptionFlags.BufferStructured;
+                d3d11Desc.MiscFlags |= ResourceOptionFlags.BufferStructured;
             }
         }
 

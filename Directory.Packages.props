@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <!--
+    Directory.Packages.props is automatically picked up and imported by
+    Microsoft.Common.targets. This file needs to exist, even if empty so that
+    files in the parent directory tree, with the same name, are not imported
+    instead. The import fairly late and most other props/targets will have been
+    imported beforehand. We also don't need to add ourselves to
+    MSBuildAllProjects, as that is done by the file that imports us.
+  -->
+
+  <!-- Package versions for package references across all projects -->
+  <ItemGroup>
+    <PackageVersion Include="System.Memory" Version="4.5.4" />
+    <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+    <PackageVersion Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
+
+    <PackageVersion Include="Vortice.Mathematics" Version="1.4.13" />
+    <PackageVersion Include="Vortice.Direct3D11" Version="2.1.12-beta" />
+    <PackageVersion Include="Vortice.Direct3D12" Version="2.1.12-beta" />
+    <PackageVersion Include="Vortice.Vulkan" Version="1.5.11" />
+
+    <!-- Used by samples -->
+    <PackageVersion Include="ppy.SDL2-CS" Version="1.0.518-alpha" />
+
+    <!-- Tests -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="2.2.10" />
+    <PackageVersion Include="MSTest.TestFramework" Version="2.2.10" />
+    
+  </ItemGroup>
+
+</Project>

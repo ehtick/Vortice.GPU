@@ -23,8 +23,8 @@ internal class D3D11Texture : Texture
                     Format = ToDXGIFormat(Format),
                     Usage = ResourceUsage.Default,
                     BindFlags = BindFlags.ShaderResource,
-                    CpuAccessFlags = CpuAccessFlags.None,
-                    OptionFlags = ResourceOptionFlags.None,
+                    CPUAccessFlags = CpuAccessFlags.None,
+                    MiscFlags = ResourceOptionFlags.None,
                 };
 
                 Handle = device.NativeDevice.CreateTexture1D(d3d11Desc1D);
@@ -40,13 +40,13 @@ internal class D3D11Texture : Texture
                     SampleDescription = new SampleDescription(1, 0),
                     Usage = ResourceUsage.Default,
                     BindFlags = BindFlags.ShaderResource,
-                    CpuAccessFlags = CpuAccessFlags.None,
-                    OptionFlags = ResourceOptionFlags.None
+                    CPUAccessFlags = CpuAccessFlags.None,
+                    MiscFlags = ResourceOptionFlags.None
                 };
 
                 if (ArraySize >= 6 && Width == Height)
                 {
-                    d3d11Desc2D.OptionFlags |= ResourceOptionFlags.TextureCube;
+                    d3d11Desc2D.MiscFlags |= ResourceOptionFlags.TextureCube;
                 }
 
                 Handle = device.NativeDevice.CreateTexture2D(d3d11Desc2D);
@@ -61,8 +61,8 @@ internal class D3D11Texture : Texture
                     Format = ToDXGIFormat(Format),
                     Usage = ResourceUsage.Default,
                     BindFlags = BindFlags.ShaderResource,
-                    CpuAccessFlags = CpuAccessFlags.None,
-                    OptionFlags = ResourceOptionFlags.None
+                    CPUAccessFlags = CpuAccessFlags.None,
+                    MiscFlags = ResourceOptionFlags.None
                 };
 
                 Handle = device.NativeDevice.CreateTexture3D(d3d11Desc3D);

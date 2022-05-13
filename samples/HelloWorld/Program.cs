@@ -13,6 +13,7 @@ class Program
 #endif
         BackendType preferredBackend = BackendType.Count;
         //preferredBackend = BackendType.Vulkan;
+        preferredBackend = BackendType.D3D11;
 
         using HelloWorldApp app = new(preferredBackend, validationMode);
         app.Run();

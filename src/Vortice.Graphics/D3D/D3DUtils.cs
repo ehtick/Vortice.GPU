@@ -171,24 +171,16 @@ internal static class D3DUtils
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToSampleCount(TextureSampleCount sampleCount)
     {
-        switch (sampleCount)
+        return sampleCount switch
         {
-            case TextureSampleCount.Count1:
-                return 1;
-            case TextureSampleCount.Count2:
-                return 2;
-            case TextureSampleCount.Count4:
-                return 4;
-            case TextureSampleCount.Count8:
-                return 8;
-            case TextureSampleCount.Count16:
-                return 16;
-            case TextureSampleCount.Count32:
-                return 32;
-
-            default:
-                return 1;
-        }
+            TextureSampleCount.Count1 => 1,
+            TextureSampleCount.Count2 => 2,
+            TextureSampleCount.Count4 => 4,
+            TextureSampleCount.Count8 => 8,
+            TextureSampleCount.Count16 => 16,
+            TextureSampleCount.Count32 => 32,
+            _ => 1,
+        };
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

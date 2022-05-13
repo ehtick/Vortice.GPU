@@ -4,7 +4,7 @@
 namespace Vortice.Graphics;
 
 /// <summary>
-/// <see cref="Buffer"/> access.
+/// Defines graphics resource CPU access.
 /// </summary>
 public enum CpuAccess
 {

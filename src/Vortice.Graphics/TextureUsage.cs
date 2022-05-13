@@ -14,4 +14,5 @@ public enum TextureUsage
     ShaderWrite = 1 << 1,
     ShaderReadWrite = ShaderRead | ShaderWrite,
     RenderTarget = 1 << 2,
+    ShadingRate = 1 << 3,
 }

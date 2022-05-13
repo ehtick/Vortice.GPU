@@ -13,10 +13,28 @@ public abstract class Buffer : GraphicsResource
     {
         Usage = descriptor.Usage;
         Size = descriptor.Size;
+        Access = descriptor.Access;
+        SharedResourceFlags = descriptor.SharedResourceFlags;
         _label = descriptor.Label;
     }
 
+    /// <summary>
+    /// Gets the buffer usage (see <see cref="BufferUsage"/>).
+    /// </summary>
     public BufferUsage Usage { get; }
 
+    /// <summary>
+    /// Gets the buffer size in bytes.
+    /// </summary>
     public ulong Size { get; }
+
+    /// <summary>
+    /// Gets the buffer CPU access.
+    /// </summary>
+    public CpuAccess Access { get; }
+
+    /// <summary>
+    /// Gets the buffer shared flags.
+    /// </summary>
+    public SharedResourceFlags SharedResourceFlags { get; set; }
 }

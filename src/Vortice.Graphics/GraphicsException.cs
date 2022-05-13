@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace Vortice.Graphics;
 
-public sealed class GraphicsException : Exception
+public class GraphicsException : Exception
 {
     public GraphicsException()
     {

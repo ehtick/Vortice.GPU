@@ -26,6 +26,8 @@ public record struct TextureDescriptor : IEquatable<TextureDescriptor>
         MipLevels = mipLevels == 0 ? CountMipLevels(width, height, dimension == TextureDimension.Texture3D ? depthOrArraySize : 1) : mipLevels;
         SampleCount = sampleCount;
         Usage = usage;
+        Access = CpuAccess.None;
+        SharedResourceFlags = SharedResourceFlags.None;
         Label = default;
     }
 
@@ -102,9 +104,16 @@ public record struct TextureDescriptor : IEquatable<TextureDescriptor>
     public TextureSampleCount SampleCount { get; }
 
     /// <summary>
+    /// CPU access of <see cref="Texture"/>
+    /// </summary>
+    public CpuAccess Access { get; set; }
+
+    public SharedResourceFlags SharedResourceFlags { get; set; }
+
+    /// <summary>
     /// Gets or sets the <see cref="Texture"/> label.
     /// </summary>
-    public string? Label { get; init; }
+    public string? Label { get; set; }
 
     /// <summary>
     /// Returns the number of mip levels given a texture size

@@ -14,22 +14,25 @@ public record struct BufferDescriptor : IEquatable<BufferDescriptor>
         Size = size;
         Access = access;
         Label = label;
+        SharedResourceFlags = SharedResourceFlags.None;
     }
 
     /// <summary>
     /// <see cref="BufferUsage"/> of <see cref="Buffer"/>.
     /// </summary>
-    public BufferUsage Usage { get; init; }
+    public BufferUsage Usage { get; set; }
 
     /// <summary>
     /// Size in bytes of <see cref="Buffer"/>
     /// </summary>
-    public ulong Size { get; init; }
+    public ulong Size { get; set; }
 
     /// <summary>
     /// CPU access of <see cref="Buffer"/>
     /// </summary>
-    public CpuAccess Access { get; init; }
+    public CpuAccess Access { get; set; }
+
+    public SharedResourceFlags SharedResourceFlags { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="Buffer"/> label.

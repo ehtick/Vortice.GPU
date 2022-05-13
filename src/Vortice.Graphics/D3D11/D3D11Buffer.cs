@@ -13,17 +13,32 @@ internal class D3D11Buffer : Buffer
     public D3D11Buffer(D3D11GraphicsDevice device, in BufferDescriptor descriptor, IntPtr initialData)
         : base(device, descriptor)
     {
+        ResourceUsage usage = ResourceUsage.Default;
+        BindFlags bindFlags = BindFlags.None;
+        CpuAccessFlags cpuAccessFlags = 0u;
+
+        if (descriptor.Access == CpuAccess.Read)
+        {
+            usage = ResourceUsage.Staging;
+            cpuAccessFlags = CpuAccessFlags.Read;
+        }
+        else if (descriptor.Access == CpuAccess.Write)
+        {
+            usage = ResourceUsage.Dynamic;
+            cpuAccessFlags = CpuAccessFlags.Write;
+        }
+
         BufferDescription d3d11Desc = new()
         {
             ByteWidth = (int)descriptor.Size,
-            Usage = ResourceUsage.Default,
+            Usage = usage,
             BindFlags = BindFlags.ShaderResource,
             CPUAccessFlags = CpuAccessFlags.None,
             MiscFlags = ResourceOptionFlags.None,
             StructureByteStride = 0
         };
 
-        if (descriptor.Usage.HasFlag(BufferUsage.Uniform))
+        if (descriptor.Usage.HasFlag(BufferUsage.Constant))
         {
             d3d11Desc.ByteWidth = (int)MathHelper.AlignUp((uint)d3d11Desc.ByteWidth, 64u);
             d3d11Desc.Usage = ResourceUsage.Dynamic;
@@ -76,6 +91,15 @@ internal class D3D11Buffer : Buffer
             {
                 //bufferDesc.StructureByteStride = desc->stride;
                 d3d11Desc.MiscFlags |= ResourceOptionFlags.BufferStructured;
+            }
+
+            if (descriptor.SharedResourceFlags.HasFlag(SharedResourceFlags.Shared_NTHandle))
+            {
+                d3d11Desc.MiscFlags |= ResourceOptionFlags.SharedKeyedMutex | ResourceOptionFlags.SharedNTHandle;
+            }
+            else if (descriptor.SharedResourceFlags.HasFlag(SharedResourceFlags.Shared))
+            {
+                d3d11Desc.MiscFlags |= ResourceOptionFlags.Shared;
             }
         }
 

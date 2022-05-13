@@ -10,9 +10,18 @@ namespace Vortice.Graphics;
 public enum BufferUsage
 {
     None = 0,
+    /// <summary>
+    /// Supports input assembly access as VertexBuffer.
+    /// </summary>
     Vertex = 1 << 0,
+    /// <summary>
+    /// Supports input assembly access as IndexBuffer.
+    /// </summary>
     Index = 1 << 1,
-    Uniform = 1 << 2,
+    /// <summary>
+    /// Supports constant buffer access.
+    /// </summary>
+    Constant = 1 << 2,
     ShaderRead = 1 << 3,
     ShaderWrite = 1 << 4,
     ShaderReadWrite = ShaderRead | ShaderWrite,

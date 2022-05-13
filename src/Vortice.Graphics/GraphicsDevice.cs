@@ -131,6 +131,47 @@ public abstract class GraphicsDevice : IDisposable
         Guard.IsGreaterThanOrEqualTo(descriptor.Height, 1, nameof(TextureDescriptor.Height));
         Guard.IsGreaterThanOrEqualTo(descriptor.DepthOrArraySize, 1, nameof(TextureDescriptor.DepthOrArraySize));
 
+        bool is3D = descriptor.Dimension == TextureDimension.Texture3D;
+        bool isCube = false;
+        bool isDepthStencil = TextureFormatUtils.IsDepthStencilFormat(descriptor.Format);
+
+        if (descriptor.Dimension == TextureDimension.Texture2D &&
+            descriptor.DepthOrArraySize >= 6 &&
+            descriptor.Width == descriptor.Height &&
+            descriptor.MipLevels == 1)
+        {
+            isCube = true;
+        }
+
+        if (descriptor.SampleCount != TextureSampleCount.Count1)
+        {
+            if (isCube)
+            {
+                throw new GraphicsException("Cubemap texture cannot be multisample");
+            }
+
+            if (is3D)
+            {
+                throw new GraphicsException("3D texture cannot be multisample");
+            }
+
+            if (descriptor.MipLevels > 1)
+            {
+                throw new GraphicsException("Multisample texture cannot have mipmaps");
+            }
+        }
+
+        if (isDepthStencil && descriptor.MipLevels > 1)
+        {
+            throw new GraphicsException("Depth texture cannot have mipmaps");
+        }
+
+        // Check if depth texture and ShaderWrite
+        if (isDepthStencil && descriptor.Usage.HasFlag(TextureUsage.ShaderWrite))
+        {
+            throw new GraphicsException("Cannot create Depth texture with ShaderWrite usage");
+        }
+
         return CreateTextureCore(descriptor);
     }
 
